@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>/posts/Nmap/</loc>
+    <lastmod>2021-08-14T00:06:00+02:00</lastmod>
+  </url><url>
     <loc>/about/</loc>
     <lastmod>2022-01-06T00:06:00+02:00</lastmod>
   </url><url>
@@ -17,6 +20,16 @@
     <loc>/</loc>
     <lastmod>2022-01-06T00:06:00+02:00</lastmod>
   </url><url>
+    <loc>/tags/Notes/</loc>
+    <lastmod>2021-08-14T00:06:00+02:00</lastmod>
+  </url><url>
+    <loc>/posts/</loc>
+    <lastmod>2021-08-14T00:06:00+02:00</lastmod>
+  </url><url>
+    <loc>/tags/Security/</loc>
+    <lastmod>2021-08-14T00:06:00+02:00</lastmod>
+  </url><url>
     <loc>/tags/</loc>
+    <lastmod>2021-08-14T00:06:00+02:00</lastmod>
   </url>
 </urlset>
