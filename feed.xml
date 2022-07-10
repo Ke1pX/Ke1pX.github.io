@@ -8,12 +8,12 @@
     
             <link href="/" rel="alternate" type="text/html" title="HTML" />
             <link href="/feed.xml" rel="self" type="application/atom+xml" title="Atom" />
-    <updated>2022-07-09T14:03:49+08:00</updated>
+    <updated>2022-07-10T12:26:02+08:00</updated>
     
     <id>/</id>
         
         <entry>
-            <title type="html"><![CDATA[Nmap 常用参数]]></title>
+            <title type="html"><![CDATA[Nmap 常用选项]]></title>
             <link href="/posts/Nmap/?utm_source=atom_feed" rel="alternate" type="text/html"  hreflang="en" />
             <id>/posts/Nmap/</id>
             
@@ -78,7 +78,7 @@
 <p><strong>选项</strong></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Text" data-lang="Text"><span class="line"><span class="cl">-iL &lt;inputfilename&gt; ---从列表中输入，如使用命令 ``` nmap [选项] filename ```
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">-iR &lt;hostnum&gt; ---随机选择目标，&lt;hostnum&gt; 参数为随机生成多少个 IP
+</span></span><span class="line"><span class="cl">-iR &lt;hostnum&gt; ---随机选择目标，&lt;hostnum&gt; 选项为随机生成多少个 IP
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">--exclude &lt;host1 host2 ...&gt; ---排除主机、网络，指定排除扫描的目标或范围，排除主机间以空格隔开
 </span></span><span class="line"><span class="cl">
@@ -215,7 +215,7 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">-v  ---打印扫描细节
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">-PN ---使用 -PN 命令控制 Nmap 跳过主机发现、不向远程主机发送 PING 请求包，使用参数 -P0、-PD、-Pn 与参数 -PN 效果一致
+</span></span><span class="line"><span class="cl">-PN ---使用 -PN 命令控制 Nmap 跳过主机发现、不向远程主机发送 PING 请求包，使用选项 -P0、-PD、-Pn 与选项 -PN 效果一致
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">-sC ---根据识别的端口服务信息,调用默认脚本进行扫描
 </span></span></code></pre></div><div class="gblog-post__anchorwrap">
