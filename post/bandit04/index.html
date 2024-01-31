@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.122.0"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest"><title>Wargame-Bandit Lv 24-29&nbsp;&ndash;&nbsp;Ke1pX&#39;s Blog</title>
+
+
+
+
+
+
+<style title="Normalize iconfont">.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}</style>
+
+<link rel="stylesheet" href="/css/core.d8b6012c0ed15bd9522f2a69ab4af7a47749039b662fab09ba21fb89493571df846ceb54b5873666597cbc974e9fa568.css" integrity="sha384-2LYBLA7RW9lSLyppq0r3pHdJA5tmL6sJuiH7iUk1cd&#43;EbOtUtYc2Zll8vJdOn6Vo">
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Wargame-Bandit Lv 24-29" />
+<meta name="description" content="Null">
+
+
+<script src="/js/base.1351f9b51f82311528d10cabf8d525eb8b4b2d730ae2a75b44fe3edf08b098afa085f8fed4229ecfee34317a18e71808.js" defer integrity="sha384-E1H5tR&#43;CMRUo0Qyr&#43;NUl64tLLXMK4qdbRP4&#43;3wiwmK&#43;ghfj&#43;1CKez&#43;40MXoY5xgI"></script>
+<script>(() => {
+  // <stdin>
+  remark_config = {
+    host: void 0,
+    locale: void 0,
+    no_footer: true,
+    components: []
+    // 改成在相应页面手动打开
+  };
+  if (void 0) {
+    remark_config.site_id = void 0;
+  }
+  if (void 0) {
+    remark_config.url = void 0 + window.location.pathname;
+  }
+  if (void 0) {
+    remark_config.theme = void 0;
+  }
+})();
+</script>
+
+
+
+
+<script>remark_config.components = ["embed"]</script>
+
+
+<script src="/js/post.66b3fd96095efd44a25bff6070506c8bf4cca83a86019bf994a08b2f9993f47d25e0864c4ac0d05e2e467b4b8016e1c9.js"defer
+  integrity="sha384-ZrP9lgle/USiW/9gcFBsi/TMqDqGAZv5lKCLL5mT9H0l4IZMSsDQXi5Ge0uAFuHJ"></script>
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "BlogPosting",
+    "headline": "Wargame-Bandit Lv 24-29",
+    "author": {
+      "@type": "Person",
+      "name": "Ke1pX"
+    },
+    "datePublished":"2020-08-17",
+    "dateModified":"2020-08-17"}
+</script>
+
+
+  <link rel="alternate" type="application/rss+xml" href="/index.xml" title="Ke1pX&#39;s Blog">
+
+
+
+<script>!function(e,n){for(var o=0;o<e.length;o++){var r=n.createElement("script"),c=".js",d=n.head||n.body;"noModule"in r?(r.type="module",c=".mjs"):r.async=!0,r.defer=!0,r.src=remark_config.host+"/web/"+e[o]+c,d.appendChild(r)}}(remark_config.components||["embed"],document);
+</script>
+<body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Ke1pX's Blog</span></a></span>
+        <span class="header right-side">
+<div class="nav wrap">
+  <nav class="nav"><a class="nav item link" href="/archives/"title="归档">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-box-archive"></use>
+        </svg>
+        <span>Archives</span>
+      </a><a class="nav item link" href="/about/"title="关于我">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-user"></use>
+        </svg>
+        <span>About</span>
+      </a><a class="nav item link" href="/index.xml"title="">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-rss-square"></use>
+        </svg>
+        <span>RSS</span>
+      </a><button id="theme-changer" class="nav item"
+      onclick="themeManager.setNextTheme()" title="切换主题">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-lightbulb"></use>
+      </svg>
+    </button>
+  </nav>
+</div>
+</span></div></section><section id="content">
+
+
+<main id="article-and-sidebar">
+  <div class="article-container"><section class="article header">
+    <h1 class="article title">Wargame-Bandit Lv 24-29</h1><p class="article date">2020 年 08 月 17 日<span class="reading-time"> • 预计阅读时间 4 分钟</span></p></section><article class="article markdown-body"><h2 id="level-24---25">Level 24 - 25</h2>
+<blockquote>
+<p>A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.</p>
+<p>—Level 24 - 25</p>
+</blockquote>
+<p>根据提示，我们得知在本地端口 30002 上运行着一个后台进程，需要提供这一关卡的密码 (bandit24) 和一个 4 位数的密码(该密码需要进行暴力破解)来获取下一关卡密码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">nc localhost <span class="m">30002</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img38.png"  alt=":(" >
+<p>既然如此我们可以编写一个 shell 脚本生成一个密码字典然后向这个端口提供密码即可，同样的我们这个目录下没有权限创建文件，因此在 /tmp 目录下创建一个目录进行 shell 脚本的编写</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ls -ld
+</span></span><span class="line"><span class="cl">mkdir /tmp/25p
+</span></span><span class="line"><span class="cl">vi passwd.sh
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img39.png"  alt=":(" >
+<p>创建一个 passwd 的变量将我们当前关卡的密码作为值，然后创建一个 for 循环遍历 0000 到 9999 所有组合，使用 enho 命令拼接当前密码和 4 位数字组合将输出的结果追加到 output.txt 文件中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#! /bin/bash                                                                          
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="nv">passwd</span><span class="o">=</span><span class="s2">&#34;UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ&#34;</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> i in <span class="o">{</span>0000..9999<span class="o">}</span>              
+</span></span><span class="line"><span class="cl"><span class="k">do</span> 
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="nv">$passwd</span><span class="s1">&#39; &#39;</span><span class="nv">$i</span> &gt;&gt; output.txt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看文件权限并赋予执行权，运行脚本生成密码字典，使用使用管道操作将查看字典输出提供到这个端口再将结果追加到一个文本文件中。查看该文件对输出结果排序，使用密码连接到下一关卡</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ls -l
+</span></span><span class="line"><span class="cl">chmod <span class="m">744</span> passwd.sh
+</span></span><span class="line"><span class="cl">./passwd.sh
+</span></span><span class="line"><span class="cl">ls -l
+</span></span><span class="line"><span class="cl">cat output.txt <span class="p">|</span> nc localhost <span class="m">30002</span> &gt;&gt; pp25.txt
+</span></span><span class="line"><span class="cl">cat pp25.txt <span class="p">|</span> sort <span class="p">|</span> uniq -u
+</span></span><span class="line"><span class="cl">ssh bandit25@localhost
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img40.png"  alt=":(" >
+<h2 id="level-25---26">Level 25 - 26</h2>
+<blockquote>
+<p>Logging in to bandit26 from bandit25 should be fairly easy… The shell for user bandit26 is not /bin/bash, but something else. Find out what it is, how it works and how to break out of it.</p>
+<p>—Level 25 - 26</p>
+</blockquote>
+<p>进入到 bandit25 关卡，ls 看看当前目录下存在一个私钥，尝试使用其登录到下一关卡，发现刚一进去会话就被关闭了使用 -T 选项也没作用。查看提示说 bandit26 的 shell 并不是 /bin/bash</p>
+<img src="/img/bandit/img41.png"  alt=":(" >
+<p>那么查看一下 /etc/passwd 文件，发现果然不是 bin/bash 这个 shell。查看 showtext 这个 shell 脚本发现含有一个 more 命令查看 ～/text.txt 文件的操作，也就是说登陆到 bandit26 时系统执行这个脚本作为用户登陆的 shell，接着执行 more ~/text.txt 命令按页显示文件内容，最后退出，这样我们的会话也就断开了。</p>
+<blockquote>
+<p>more 是一个 shell 命令，允许以交互模式显示文件。一般情况下，这种交互模式仅在文件内容太大而无法在终端窗口中完全显示时使用。交互模式下允许按 v 键在编辑器 &ldquo;vi&rdquo; 中打开文件。</p>
+</blockquote>
+<img src="/img/bandit/img42.png"  alt=":(" >
+<p>但我们在登录时怎么直接退出了呢？并没有在 more 的交互模式下浏览文件？看了其他作者的 WP，原因是 more 的内容太少了，意味着 more 直接全部显示了文本内容，不需要进入交互模式。所以我们可以将终端缩小一点让 more 无法在当前大小的终端下完全显示文本内容而进入交互模式。</p>
+<img src="/img/bandit/img43.png"  alt=":(" >
+<p>接下来可以在 more 命令下启用 vi，在 vi 中执行命令(按 v 键 调用 vi 编辑器), 输入冒号 (:) 后接上要执行的命令，之后按回车键执行</p>
+<p><a href="https://www.runoob.com/linux/linux-comm-more.html"target="_blank" rel="noopener noreferrer">有关 more 命令</a></p>
+<p>调用 bash 这个 shell</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">set</span> <span class="nv">shell</span><span class="o">=</span>/bin/bash
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img44.png"  alt=":(" >
+<p>使用 sh 命令，切换到 bash 这个 shell 中</p>
+<img src="/img/bandit/img45.png"  alt=":(" >
+<p>ok～，查看这一关卡的密码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">cat /etc/bandit_pass/bandit26
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img46.png"  alt=":(" >
+<h2 id="level-26---27">Level 26 - 27</h2>
+<blockquote>
+<p>Good job getting a shell! Now hurry and grab the password for bandit27!</p>
+<p>—Level 26 - 27</p>
+</blockquote>
+<p>直接查看当前目录下的有那些文件且文件权限吧，发现有个名为 bandit27-do 的可执行文件且设置文件所属用户的 x 位(执行权限)为特殊权限 (S)，那么还是利用这个文件查看 /etc/bandi_pass/ 目录下 bandit27 的密码就好啦</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ls -l
+</span></span><span class="line"><span class="cl">./bandit27-do whoami
+</span></span><span class="line"><span class="cl">./bandit27-do cat /etc/bandit_pass/bandit27
+</span></span><span class="line"><span class="cl">ssh bandit27@localhost
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img47.png"  alt=":(" >
+<h2 id="level-27---28">Level 27 - 28</h2>
+<blockquote>
+<p>There is a git repository at ssh://bandit27-git@localhost/home/bandit27-git/repo. The password for the user bandit27-git is the same as for the user bandit27.</p>
+<p>Clone the repository and find the password for the next level.</p>
+<p>—Level 27 -28</p>
+</blockquote>
+<p>提示存在一个 git 仓库且用户 bandit27-git 的密码与当前用户 bandit27 的密码相同，克隆这个仓库找到下一关卡密码。</p>
+<p>仓库地址:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ssh://bandit27-git@localhost/home/bandit27-git/repo
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html"target="_blank" rel="noopener noreferrer">常用 Git 命令清单</a></p>
+<p>我们需要创建一个目录克隆这个仓库，显然在当前目录下无法进行，在 /tmp 目录下创建一个 bandit28 的目录然后克隆这个仓库，查看文件找到下一关卡密码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mkdir /tmp/bandit28
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /tmp/bandit28
+</span></span><span class="line"><span class="cl">git clone ssh://bandit27-git@localhost/home/bandit27-git/repo
+</span></span><span class="line"><span class="cl">ls
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> repo
+</span></span><span class="line"><span class="cl">ls
+</span></span><span class="line"><span class="cl">cat README
+</span></span><span class="line"><span class="cl">ssh bandit28@localhost
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img48.png"  alt=":(" >
+<h2 id="level-28---29">Level 28 - 29</h2>
+<blockquote>
+<p>There is a git repository at ssh://bandit28-git@localhost/home/bandit28-git/repo. The password for the user bandit28-git is the same as for the user bandit28.</p>
+<p>Clone the repository and find the password for the next level.</p>
+<p>—level 28 -29</p>
+</blockquote>
+<p>提示与上一关卡类似，需要克隆一个仓库然后找到密码。</p>
+<p>仓库地址:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ssh://bandit28-git@localhost/home/bandit28-git/repo
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>同样的在 /tmp 目录下创建一个名为 bandit29 的目录然后在该目录下克隆仓库</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mkdir /tmp/bandit29
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /tmp/bandit29
+</span></span><span class="line"><span class="cl">git clone ssh://bandit28-git@localhost/home/bandit28-git/repo
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img49.png"  alt=":(" >
+<p>查看 README.md，发现密码项已经被隐藏了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl"><span class="nb">cd</span> repo
+</span></span><span class="line"><span class="cl">ls
+</span></span><span class="line"><span class="cl">cat README.md
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img50.png"  alt=":(" >
+<p>查看 git 日志</p>
+<img src="/img/bandit/img51.png"  alt=":(" >
+<p>有一个最近一次提交的描述信息为解决信息泄露，应该就是这次修改将密码隐藏了，那么查看这个提交的内容即可找到密码连接到下一关卡</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">git show edd935d60906b33f0619605abd1689808ccdd5ee
+</span></span><span class="line"><span class="cl">ssh bandit29@localhost
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img52.png"  alt=":(" ></article>
+
+    
+    
+    
+    
+    <section class="article license-custom"><a rel="license" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target="_blank">
+      <img alt="CC BY-NC-SA 4.0" width=80 height=15
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAIAAAD8q9/YAAAABGdBTUEAANbY1E9YMgAAAapJREFUSMflljFPAjEUx98HsMUb2aBqdCKSToQ4cHTD9SYSx2Nw0sFOJMQB2DCBpV/hnNTFwOAEIaTxG/AV&#43;hVqtOQ8oXdybue93HBp3mvv9/7vvStADk3nxr6BH5&#43;C6NO57gDAcDi0hjHGMMYTMTbOq/dV4bCQCV3twBMxxhjH0YbMp2enxn/6Nu31ehkGrl/Uy&#43;Vycm1IKQGgfdU2IUu5bF22sgqMMDLySikJIQDAGFNKMcYAgBAipTQiV2k1rOrRw8g6F7YP&#43;/luXYxGWZ0TTknwtwN377sAMJvNtNaEEM/ztNb8yxzHUUoJIYIgMIsIo7Cq54u5dfetl7gP2s2ONVlxOUrnHwW&#43;vbsBACmlUio6tzzPo5RGq5pzjjE2US&#43;vz4vVIiH3VhnjIONSs7vnrrwJIqdQmDHm&#43;75RmHMuhNgojFIonJB7axn/qthW7B8V/uxhtOnhIAgcxwEA3/fDHqaUrtdrrXWz2aycV/bs4f2B9&#43;/huDGRGrhWr5VKpRxN6YkYI3QwGAwSgF3XPT45&#43;if/4XB09ft9K23DbRSLxWzftPJ1l86VfQA/Yr8BK4J&#43;aAAAAABJRU5ErkJggg==" />
+    </a>
+    <p>© 2020-2024 Ke1pX</p>
+  </section></div>
+
+  
+  
+    <div id="article-sidebar" class="article sidebar">
+      <button onclick="sidebarManager.toggle()">目录</button>
+      <nav id="TableOfContents">
+  <ol>
+    <li><a href="#level-24---25">Level 24 - 25</a></li>
+    <li><a href="#level-25---26">Level 25 - 26</a></li>
+    <li><a href="#level-26---27">Level 26 - 27</a></li>
+    <li><a href="#level-27---28">Level 27 - 28</a></li>
+    <li><a href="#level-28---29">Level 28 - 29</a></li>
+  </ol>
+</nav>
+    </div>
+  
+</main>
+
+<div class="article bottom">
+  
+  </div></section><section id="footer"><div class="footer-wrap">
+  <p class="copyright">© 2020-2024 Ke1pX</p>
+  <p class="powerby">
+    <span>Powered by</span>
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>
+    <span>&</span>
+    <a href="https://github.com/cntrump/hugo-notepadium" target="_blank"
+      rel="noopener">Notepadium</a>
+    <span>(<a href="https://github.com/rydesun/catcat.cc" target="_blank"
+      rel="noopener">modified</a>)</span>
+  </p>
+</div>
+</section></body>
+
+</html>

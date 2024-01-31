@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.122.0"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest"><title>Wargame-Bandit Lv 10-17&nbsp;&ndash;&nbsp;Ke1pX&#39;s Blog</title>
+
+
+
+
+
+
+<style title="Normalize iconfont">.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}</style>
+
+<link rel="stylesheet" href="/css/core.d8b6012c0ed15bd9522f2a69ab4af7a47749039b662fab09ba21fb89493571df846ceb54b5873666597cbc974e9fa568.css" integrity="sha384-2LYBLA7RW9lSLyppq0r3pHdJA5tmL6sJuiH7iUk1cd&#43;EbOtUtYc2Zll8vJdOn6Vo">
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Wargame-Bandit Lv 10-17" />
+<meta name="description" content="Null">
+
+
+<script src="/js/base.1351f9b51f82311528d10cabf8d525eb8b4b2d730ae2a75b44fe3edf08b098afa085f8fed4229ecfee34317a18e71808.js" defer integrity="sha384-E1H5tR&#43;CMRUo0Qyr&#43;NUl64tLLXMK4qdbRP4&#43;3wiwmK&#43;ghfj&#43;1CKez&#43;40MXoY5xgI"></script>
+<script>(() => {
+  // <stdin>
+  remark_config = {
+    host: void 0,
+    locale: void 0,
+    no_footer: true,
+    components: []
+    // 改成在相应页面手动打开
+  };
+  if (void 0) {
+    remark_config.site_id = void 0;
+  }
+  if (void 0) {
+    remark_config.url = void 0 + window.location.pathname;
+  }
+  if (void 0) {
+    remark_config.theme = void 0;
+  }
+})();
+</script>
+
+
+
+
+<script>remark_config.components = ["embed"]</script>
+
+
+<script src="/js/post.66b3fd96095efd44a25bff6070506c8bf4cca83a86019bf994a08b2f9993f47d25e0864c4ac0d05e2e467b4b8016e1c9.js"defer
+  integrity="sha384-ZrP9lgle/USiW/9gcFBsi/TMqDqGAZv5lKCLL5mT9H0l4IZMSsDQXi5Ge0uAFuHJ"></script>
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "BlogPosting",
+    "headline": "Wargame-Bandit Lv 10-17",
+    "author": {
+      "@type": "Person",
+      "name": "Ke1pX"
+    },
+    "datePublished":"2020-08-15",
+    "dateModified":"2020-08-15"}
+</script>
+
+
+  <link rel="alternate" type="application/rss+xml" href="/index.xml" title="Ke1pX&#39;s Blog">
+
+
+
+<script>!function(e,n){for(var o=0;o<e.length;o++){var r=n.createElement("script"),c=".js",d=n.head||n.body;"noModule"in r?(r.type="module",c=".mjs"):r.async=!0,r.defer=!0,r.src=remark_config.host+"/web/"+e[o]+c,d.appendChild(r)}}(remark_config.components||["embed"],document);
+</script>
+<body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Ke1pX's Blog</span></a></span>
+        <span class="header right-side">
+<div class="nav wrap">
+  <nav class="nav"><a class="nav item link" href="/archives/"title="归档">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-box-archive"></use>
+        </svg>
+        <span>Archives</span>
+      </a><a class="nav item link" href="/about/"title="关于我">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-user"></use>
+        </svg>
+        <span>About</span>
+      </a><a class="nav item link" href="/index.xml"title="">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-rss-square"></use>
+        </svg>
+        <span>RSS</span>
+      </a><button id="theme-changer" class="nav item"
+      onclick="themeManager.setNextTheme()" title="切换主题">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-lightbulb"></use>
+      </svg>
+    </button>
+  </nav>
+</div>
+</span></div></section><section id="content">
+
+
+<main id="article-and-sidebar">
+  <div class="article-container"><section class="article header">
+    <h1 class="article title">Wargame-Bandit Lv 10-17</h1><p class="article date">2020 年 08 月 15 日<span class="reading-time"> • 预计阅读时间 3 分钟</span></p></section><article class="article markdown-body"><h2 id="level-10---11">Level 10 - 11</h2>
+<blockquote>
+<p>The password for the next level is stored in the file data.txt, which contains base64 encoded data</p>
+<p>—Level 10 - 11</p>
+</blockquote>
+<p>提示密码在当前目录下的 data.txt 文件中,且是经过 base64 编码加密的数据，使用 cat 命令查看文件内容并使用管道操作连接 base64 命令同时读取并解码文件内容，-d 选项为解码数据，获取密码后使用 SSH 连接到下一关卡</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ls
+</span></span><span class="line"><span class="cl">cat data.txt
+</span></span><span class="line"><span class="cl">cat data.txt <span class="p">|</span> base64 -d 
+</span></span><span class="line"><span class="cl">ssh bandit11@localhost
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img13.png"  alt=":(" >
+<h2 id="level-11---12">Level 11 - 12</h2>
+<blockquote>
+<p>The password for the next level is stored in the file data.txt, where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions</p>
+<p>—Level 11 - 12</p>
+</blockquote>
+<p>提示在密码在 data.txt 文件中，其中小写字母 (a-z) 和大写字母 (A-Z) 都偏移了 13 个位置，关键词 “rotated”、“13”，依此可知该文本内容应该为凯撒密码的加密后的结果（<a href="https://zh.wikipedia.org/wiki/ROT13"target="_blank" rel="noopener noreferrer"><strong>ROT13</strong></a>），使用 cat 命令查看文件并使用管道符将 cat 命令输出作为 tr 命令的输入对文本内容进行字符替换，其中 a-zA-Z 表示匹配所有小写和大写字母，n-za-mN-ZA-M 表示替换为字母表中的对应字母，如：a 替换为 n，b 替换为 o，c 替换为 p，以此类推，直到 m 替换为 z，然后字母从 n 到 z 依次替换为 a 到 m。最终获取正确密码并使用 SSH 连接到下一关卡</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ls
+</span></span><span class="line"><span class="cl">cat data.txt
+</span></span><span class="line"><span class="cl">cat data.txt <span class="p">|</span> tr a-zA-Z n-za-mN-ZA-M
+</span></span><span class="line"><span class="cl">ssh bandit12@localhost
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img14.png"  alt=":(" >
+<h2 id="level-12---13">Level 12 - 13</h2>
+<blockquote>
+<p>The password for the next level is stored in the file data.txt, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work using mkdir. For example: mkdir /tmp/myname123. Then copy the datafile using cp, and rename it using mv (read the manpages!)</p>
+<p>—Level 12 - 13</p>
+</blockquote>
+<p>提示密码在 data.txt 文件中，该文件是一个已经被重复压缩过的十六进制转储文件</p>
+<img src="/img/bandit/img15.png"  alt=":(" >
+<p>需要先将十六进制转储的文件还原(xxd命令)，但查看当前目录权限发现没有写入权限，所以在 /tmp 目录下创建一个名为 pp 的目录并将 data.txt 文件复制过去后再进行文件还原，使用 file 命令查看还原文件的文件类型对相应的类型进行反复的解压缩操作</p>
+<img src="/img/bandit/img16.png"  alt=":(" >
+<img src="/img/bandit/img17.png"  alt=":(" >
+<p>最后获取到密码并使用 SSH 连接到下一关卡</p>
+<img src="/img/bandit/img18.png"  alt=":(" >
+<h2 id="level-13---14">Level 13 - 14</h2>
+<blockquote>
+<p>The password for the next level is stored in /etc/bandit_pass/bandit14 and can only be read by user bandit14. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. Note: localhost is a hostname that refers to the machine you are working on</p>
+<p>—Level 13 - 14</p>
+</blockquote>
+<p>提示不会有下一关卡的密码，但是获得了一个 SSH 私钥，使用这个私钥登录到下一个关卡</p>
+<p>参考：<a href="https://www.ssh.com/academy/ssh/command#ssh-command-line-options"target="_blank" rel="noopener noreferrer">SSH Command - Usage, Options, Configuration</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">ls
+</span></span><span class="line"><span class="cl">ssh bandit14@localhost -i sshkey.private
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img19.png"  alt=":(" >
+<h2 id="level-14---15">Level 14 - 15</h2>
+<blockquote>
+<p>The password for the next level can be retrieved by submitting the password of the current level to port 30000 on localhost.</p>
+<p>Level 14 - 15</p>
+</blockquote>
+<p>提示通过在向本机的 30000 端口上提供当前关卡的密码进入到下一关卡，首先查看当前关卡的密码再使用 telnet 命令(或 nc 命令)连接本地的 30000 端口，输入当前密码后屏幕显示通往下一关卡密码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">cat /etc/bandit_pass/bandit14
+</span></span><span class="line"><span class="cl">telnet loaclhost <span class="m">30000</span>
+</span></span><span class="line"><span class="cl">ssh bandit15@localhost
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img20.png"  alt=":(" >
+<h2 id="level-15---16">Level 15 - 16</h2>
+<blockquote>
+<p>The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL encryption.</p>
+<p>Helpful note: Getting “HEARTBEATING” and “Read R BLOCK”? Use -ign_eof and read the “CONNECTED COMMANDS” section in the manpage. Next to ‘R’ and ‘Q’, the ‘B’ command also works in this version of that command…</p>
+<p>—Level 15 - 16</p>
+</blockquote>
+<p>提示需要将当前关卡的密码通过 SSL 加密提交到本地的 30001 端口上来获取下一关卡密码，使用 openssl 命令的 s_client 模块可以帮助我们于 SSL 服务器进行交互，-ign_eof 保证当输入完成后不会立即中断连接</p>
+<p>参考：<a href="https://www.openssl.org/docs/man1.0.2/man1/s_client.html"target="_blank" rel="noopener noreferrer">OpenSSL Docs</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">openssl s_client -connect localhost:30001 -ign_eof
+</span></span><span class="line"><span class="cl">ssh bandit16@localhost
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img21.png"  alt=":(" >
+<p>在建立连接后我们提供当前关卡的密码，获取到通往到下一个卡密码</p>
+<img src="/img/bandit/img22.png"  alt=":(" >
+<h2 id="level-16---17">Level 16 - 17</h2>
+<blockquote>
+<p>The credentials for the next level can be retrieved by submitting the password of the current level to a port on localhost in the range 31000 to 32000. First find out which of these ports have a server listening on them. Then find out which of those speak SSL and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it.</p>
+<p>—Level 16 - 17</p>
+</blockquote>
+<p>提示说明如上一关卡方式将当前关卡的密码提交到本机上 31000 到 32000 端口范围内的一个端口上来获取下一关卡的密码，首先使用 nmap 扫描 3100-3200 这个范围的端口，扫描结果可以看到 31790 端口提示我们需要在该端口上输入密码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">nmap -A -p 31000-32000 localhost
+</span></span><span class="line"><span class="cl">openssl s_client -connect localhost:31790 -ign_eof
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img23.png"  alt=":(" >
+<img src="/img/bandit/img24.png"  alt=":(" >
+<p>输入当前关卡的密码后获取到一段 RSA 密钥，我们需要创建一个私钥，但在当前目录下我们无法执行写入操作，因此我仍在 /tmp 目录下创建一个目录并创建一个文件将 RSA 密钥粘贴到文件中保存、修改权限仅为所有者可读写，再使用 SSH 连接到下一关卡</p>
+<img src="/img/bandit/img25.png"  alt=":(" >
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">mkdir -p /tmp/p
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /tmp/p
+</span></span><span class="line"><span class="cl">vi p.private
+</span></span><span class="line"><span class="cl">chmod <span class="m">600</span> p.private
+</span></span><span class="line"><span class="cl">ssh bandit17@localhost -i p.private
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img src="/img/bandit/img26.png"  alt=":(" ></article>
+
+    
+    
+    
+    
+    <section class="article license-custom"><a rel="license" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target="_blank">
+      <img alt="CC BY-NC-SA 4.0" width=80 height=15
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAIAAAD8q9/YAAAABGdBTUEAANbY1E9YMgAAAapJREFUSMflljFPAjEUx98HsMUb2aBqdCKSToQ4cHTD9SYSx2Nw0sFOJMQB2DCBpV/hnNTFwOAEIaTxG/AV&#43;hVqtOQ8oXdybue93HBp3mvv9/7vvStADk3nxr6BH5&#43;C6NO57gDAcDi0hjHGMMYTMTbOq/dV4bCQCV3twBMxxhjH0YbMp2enxn/6Nu31ehkGrl/Uy&#43;Vycm1IKQGgfdU2IUu5bF22sgqMMDLySikJIQDAGFNKMcYAgBAipTQiV2k1rOrRw8g6F7YP&#43;/luXYxGWZ0TTknwtwN377sAMJvNtNaEEM/ztNb8yxzHUUoJIYIgMIsIo7Cq54u5dfetl7gP2s2ONVlxOUrnHwW&#43;vbsBACmlUio6tzzPo5RGq5pzjjE2US&#43;vz4vVIiH3VhnjIONSs7vnrrwJIqdQmDHm&#43;75RmHMuhNgojFIonJB7axn/qthW7B8V/uxhtOnhIAgcxwEA3/fDHqaUrtdrrXWz2aycV/bs4f2B9&#43;/huDGRGrhWr5VKpRxN6YkYI3QwGAwSgF3XPT45&#43;if/4XB09ft9K23DbRSLxWzftPJ1l86VfQA/Yr8BK4J&#43;aAAAAABJRU5ErkJggg==" />
+    </a>
+    <p>© 2020-2024 Ke1pX</p>
+  </section></div>
+
+  
+  
+    <div id="article-sidebar" class="article sidebar">
+      <button onclick="sidebarManager.toggle()">目录</button>
+      <nav id="TableOfContents">
+  <ol>
+    <li><a href="#level-10---11">Level 10 - 11</a></li>
+    <li><a href="#level-11---12">Level 11 - 12</a></li>
+    <li><a href="#level-12---13">Level 12 - 13</a></li>
+    <li><a href="#level-13---14">Level 13 - 14</a></li>
+    <li><a href="#level-14---15">Level 14 - 15</a></li>
+    <li><a href="#level-15---16">Level 15 - 16</a></li>
+    <li><a href="#level-16---17">Level 16 - 17</a></li>
+  </ol>
+</nav>
+    </div>
+  
+</main>
+
+<div class="article bottom">
+  
+  </div></section><section id="footer"><div class="footer-wrap">
+  <p class="copyright">© 2020-2024 Ke1pX</p>
+  <p class="powerby">
+    <span>Powered by</span>
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>
+    <span>&</span>
+    <a href="https://github.com/cntrump/hugo-notepadium" target="_blank"
+      rel="noopener">Notepadium</a>
+    <span>(<a href="https://github.com/rydesun/catcat.cc" target="_blank"
+      rel="noopener">modified</a>)</span>
+  </p>
+</div>
+</section></body>
+
+</html>

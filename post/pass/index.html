@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.122.0"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest"><title>使用 pass 密码管理器&nbsp;&ndash;&nbsp;Ke1pX&#39;s Blog</title>
+
+
+
+
+
+
+<style title="Normalize iconfont">.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}</style>
+
+<link rel="stylesheet" href="/css/core.d8b6012c0ed15bd9522f2a69ab4af7a47749039b662fab09ba21fb89493571df846ceb54b5873666597cbc974e9fa568.css" integrity="sha384-2LYBLA7RW9lSLyppq0r3pHdJA5tmL6sJuiH7iUk1cd&#43;EbOtUtYc2Zll8vJdOn6Vo">
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="使用 pass 密码管理器" />
+<meta name="description" content="pass 是一款命令行密码管理器，pass 中的密码都保存在单独的 GnuPG 加密文件中。这些加密文件以树状结构展示，可以从一台计算机复制到另一台计算机，并通过命令行程序管理密码。">
+
+
+<script src="/js/base.1351f9b51f82311528d10cabf8d525eb8b4b2d730ae2a75b44fe3edf08b098afa085f8fed4229ecfee34317a18e71808.js" defer integrity="sha384-E1H5tR&#43;CMRUo0Qyr&#43;NUl64tLLXMK4qdbRP4&#43;3wiwmK&#43;ghfj&#43;1CKez&#43;40MXoY5xgI"></script>
+<script>(() => {
+  // <stdin>
+  remark_config = {
+    host: void 0,
+    locale: void 0,
+    no_footer: true,
+    components: []
+    // 改成在相应页面手动打开
+  };
+  if (void 0) {
+    remark_config.site_id = void 0;
+  }
+  if (void 0) {
+    remark_config.url = void 0 + window.location.pathname;
+  }
+  if (void 0) {
+    remark_config.theme = void 0;
+  }
+})();
+</script>
+
+
+
+
+<script>remark_config.components = ["embed"]</script>
+
+
+<script src="/js/post.66b3fd96095efd44a25bff6070506c8bf4cca83a86019bf994a08b2f9993f47d25e0864c4ac0d05e2e467b4b8016e1c9.js"defer
+  integrity="sha384-ZrP9lgle/USiW/9gcFBsi/TMqDqGAZv5lKCLL5mT9H0l4IZMSsDQXi5Ge0uAFuHJ"></script>
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "BlogPosting",
+    "headline": "使用 pass 密码管理器",
+    "author": {
+      "@type": "Person",
+      "name": "Ke1pX"
+    },
+    "datePublished":"2022-12-18",
+    "dateModified":"2022-12-18"}
+</script>
+
+
+  <link rel="alternate" type="application/rss+xml" href="/index.xml" title="Ke1pX&#39;s Blog">
+
+
+
+<script>!function(e,n){for(var o=0;o<e.length;o++){var r=n.createElement("script"),c=".js",d=n.head||n.body;"noModule"in r?(r.type="module",c=".mjs"):r.async=!0,r.defer=!0,r.src=remark_config.host+"/web/"+e[o]+c,d.appendChild(r)}}(remark_config.components||["embed"],document);
+</script>
+<body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Ke1pX's Blog</span></a></span>
+        <span class="header right-side">
+<div class="nav wrap">
+  <nav class="nav"><a class="nav item link" href="/archives/"title="归档">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-box-archive"></use>
+        </svg>
+        <span>Archives</span>
+      </a><a class="nav item link" href="/about/"title="关于我">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-user"></use>
+        </svg>
+        <span>About</span>
+      </a><a class="nav item link" href="/index.xml"title="">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-rss-square"></use>
+        </svg>
+        <span>RSS</span>
+      </a><button id="theme-changer" class="nav item"
+      onclick="themeManager.setNextTheme()" title="切换主题">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-lightbulb"></use>
+      </svg>
+    </button>
+  </nav>
+</div>
+</span></div></section><section id="content">
+
+
+<main id="article-and-sidebar">
+  <div class="article-container"><section class="article header">
+    <h1 class="article title">使用 pass 密码管理器</h1><p class="article date">2022 年 12 月 18 日<span class="reading-time"> • 预计阅读时间 4 分钟</span></p></section><article class="article markdown-body"><p><strong>pass</strong> 是一款命令行密码管理器，<code>pass</code> 中的密码都保存在单独的 <code>GnuPG</code> 加密文件中。这些加密文件以树状结构展示，可以从一台计算机复制到另一台计算机，并通过命令行程序管理密码。</p>
+<p><code>pass</code> 中所有密码都位于 <code>~/.password-store</code> 目录下，可以使用 <code>git</code> 将该目录设为 Git Repository 以自动跟踪密码操作。</p>
+<p>主页：<a href="https://www.passwordstore.org/"target="_blank" rel="noopener noreferrer">https://www.passwordstore.org/</a></p>
+<p>开源代码：<a href="https://git.zx2c4.com/password-store"target="_blank" rel="noopener noreferrer">https://git.zx2c4.com/password-store</a></p>
+<h2 id="安装-pass">安装 pass</h2>
+<p>Arch Linux 环境下只需要输入 <code>sudo pacman -S pass</code> 即可，同时会安装依赖包 gnupg、git、tree 。其他环境的安裝方式可以参考<a href="https://www.passwordstore.org/#download"target="_blank" rel="noopener noreferrer">官方说明</a>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">sudo pacman -S pass
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="生成-gnupg-密钥">生成 GnuPG 密钥</h2>
+<p>在初始化 pass 之前，需要配置好 <a href="https://zh.wikipedia.org/zh-cn/GnuPG"target="_blank" rel="noopener noreferrer">GnuPG</a> 密钥，且密钥信任程度（trust level）必须为 <code>ultimate</code>。</p>
+<blockquote>
+<p>参考 - <a href="https://wiki.archlinux.org/title/GnuPG#Create_a_key_pair"target="_blank" rel="noopener noreferrer">ArchWiki - Create a key pair</a></p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">gpg --full-gen-key
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="初始化-pass">初始化 pass</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">pass init &lt;gpg-id or email&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="使用-pass">使用 pass</h2>
+<h3 id="添加密码">添加密码</h3>
+<p>使用 <code>pass insert</code> 命令添加一个邮箱密码，命令执行后要求输入两次邮箱密码接着会以指定的文件层级创建目录存放加密后的密码文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">pass insert Email/abc-proton.me
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">pass ls
+</span></span><span class="line"><span class="cl">Password Store
+</span></span><span class="line"><span class="cl">└── Email
+</span></span><span class="line"><span class="cl">    └── abc-proton.me
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="查看密码">查看密码</h3>
+<p>使用 <code>pass Email/abc-proton.me</code> 或 <code>pass show Email/abc-proton.me</code> 命令查看密码之前添加的密码，查看密码会要求输入 GnuPG 密钥的密码进行身份验证。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">pass Email/abc-proton.me
+</span></span><span class="line"><span class="cl">abc
+</span></span><span class="line"><span class="cl">pass -c Email/abc-proton.me
+</span></span><span class="line"><span class="cl">Copied Email/abc-proton.me to clipboard. Will clear in <span class="m">45</span> seconds.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>查看密码操作会默认将密码打印到终端，可以使用 <code>-c</code> 参数将密码复制到剪贴板，密码会在 45 秒后从剪贴板清除。</p>
+</blockquote>
+<h3 id="生成密码">生成密码</h3>
+<p>例如，使用 <code>pass generate Servers/tokyo01-root</code> 命令生成一个 16 位的密码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">pass generate Servers/tokyo01-root <span class="m">16</span>
+</span></span><span class="line"><span class="cl">mkdir: created directory <span class="s1">&#39;/home/$USERNAME/.password-store/Servers&#39;</span>
+</span></span><span class="line"><span class="cl">The generated password <span class="k">for</span> Servers/tokyo01-root is:
+</span></span><span class="line"><span class="cl">O6BZv<span class="p">&amp;</span>W+:^F#h7IC
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>It&rsquo;s possible to generate passwords with no symbols using <code>--no-symbols</code> or <code>-n</code>, and we can copy it to the clipboard instead of displaying it at the console using <code>--clip</code> or <code>-c</code>.</p>
+<p>- <a href="https://www.passwordstore.org/"target="_blank" rel="noopener noreferrer">passwordstore.org</a></p>
+</blockquote>
+<h3 id="其它操作">其它操作</h3>
+<p>使用 <code>pass edit</code>、<code>pass rm</code> 、<code>pass cp</code> 、<code>pass mv</code>、<code>pass find</code> 等命令分别对密码文件进行编辑、删除、复制、剪切、查找操作，可使用命令 <code>man pass</code> 查看帮助信息。</p>
+<h2 id="初始化-git-仓库">初始化 Git 仓库</h2>
+<p>pass 支持使用 Git 对密码进行版本控制，为了方便我的手机及其它主机同步密码，我还需要配置一个私人 Git 服务器。</p>
+<p>使用命令对 pass 主目录 <code>~/.password-store</code> 执行初始化操作。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">pass git init
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="配置-git-服务器">配置 Git 服务器</h2>
+<p>Arch Linux 环境下配置 Git 服务器，需要将 git 用户过期日期设置为永不过期，重新启用 git 用户，再为 git 用户设置密码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">sudo chage -E -1 git
+</span></span><span class="line"><span class="cl">sudo passwd git
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">grep git /etc/passwd
+</span></span><span class="line"><span class="cl">git:x:974:974:git daemon user:/srv/git:/usr/bin/git-shell
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Arch Linux 环境下 git 用户的登陆 shell 被设置为了 git-shell，这是一个受限制的 shell 且无法进行 SSH 登陆，详情参考：<a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server"target="_blank" rel="noopener noreferrer">Git on the Server - Setting Up the Server</a></p>
+</blockquote>
+<p>为了使 SSH 能够读取到文件 <code>.ssh/authorized_keys</code> ，需要将 git 用户的主目录变更为 <code>/srv/git</code>，并手动创建文件 <code>.ssh/authorized_keys</code> 将客户端 SSH 公钥写入 git 用户的 <code>.ssh/authorized_keys</code> 文件中，以确保客户端可以执行推送和拉取操作。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">sudo mkdir -p /srv/git
+</span></span><span class="line"><span class="cl">sudo usermod git -d /srv/git
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /srv/git
+</span></span><span class="line"><span class="cl">sudo mkdir .ssh <span class="o">&amp;&amp;</span> sudo chmod <span class="m">700</span> .ssh
+</span></span><span class="line"><span class="cl">sudo touch .ssh/authorized_keys <span class="o">&amp;&amp;</span> sudo chmod <span class="m">600</span> .ssh/authorized_keys
+</span></span><span class="line"><span class="cl">sudo bash -c <span class="s2">&#34;cat /home/</span><span class="nv">$USERNAME</span><span class="s2">/.ssh/id_rsa.pub &gt;&gt; /srv/git/.ssh/authorized_keys&#34;</span>
+</span></span><span class="line"><span class="cl">sudo bash -c <span class="s2">&#34;cat /data/Share/key/phonessh.asc &gt;&gt; /srv/git/.ssh/authorized_keys&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>初始化一个 bare 的 Git 远程仓库，并配置目录权限。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">sudo git init --bare passwordstore.git
+</span></span><span class="line"><span class="cl">sudo chown -R git:git /srv/git
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>为 pass 添加远程仓库（passwordstore.git），最后将 pass 的密码文件推送至远程仓库，且确保 SSH 服务已正常启动即可。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">pass git remote add origin git@localhost:/srv/git/passwordstore.git
+</span></span><span class="line"><span class="cl">pass git push -u origin master
+</span></span><span class="line"><span class="cl">systemctl status sshd
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>至此，Git 服务器的基础配置就完成了，后续其它客户端只需要上传 SSH 公钥到 Git 服务器就可以通过这个仓库同步密码啦～</p>
+<h2 id="手机端密码同步">手机端密码同步</h2>
+<p>安卓手机使用 <a href="https://f-droid.org/packages/dev.msfjarvis.aps/"target="_blank" rel="noopener noreferrer">Password Store</a> 作为 pass 客户端，另外还需要使用 <a href="https://f-droid.org/packages/org.sufficientlysecure.keychain/"target="_blank" rel="noopener noreferrer">OpenKeychain</a> 以生成和管理 GnuPG 密钥，更直观的操作可以参考 YouTube 视频：<a href="https://www.youtube.com/watch?v=7t5M4FXqs9E"target="_blank" rel="noopener noreferrer">Self Host A Minimalist, Password Manager: Git + Command Line!</a></p>
+<p>IOS 则使用 <a href="https://mssun.github.io/passforios/"target="_blank" rel="noopener noreferrer">Pass for iOS</a> 作为客户端，客户端需要生成一对密钥以加解密密码文件，我使用安卓手机上已安装的 <a href="https://f-droid.org/packages/org.sufficientlysecure.keychain/"target="_blank" rel="noopener noreferrer">OpenKeychain</a> 为 IPhone 生成 PGP 密钥，接着将密钥备份到 pass 主机，再使用备份密码解密密钥备份文件获取密钥信息，参考 - <a href="https://code.luasoftware.com/tutorials/android-app/export-android-openkeychain-private-key-to-pc"target="_blank" rel="noopener noreferrer">Export Android Openkeychain/PGP Private Key to PC using GunPG (Linux)</a>。</p>
+<p>然后将 IPhone 的公钥导入 pass 主机，编辑信任度为 <code>绝对信任</code> 重新初始化 pass，最后推送到 Git 服务器， IPhone 上配置 <a href="https://mssun.github.io/passforios/"target="_blank" rel="noopener noreferrer">Pass for iOS</a> 导入公钥和私钥后拉取密码文件即可。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">gpg --decrypt /data/Share/key/backup_2022-12-18.sec.pgp
+</span></span><span class="line"><span class="cl">gpg --import /data/Share/key/iphoneSE.asc
+</span></span><span class="line"><span class="cl">gpg --edit-key <span class="s2">&#34;IPhone key&#34;</span>
+</span></span><span class="line"><span class="cl">pass init <span class="s2">&#34;PC Pass Key&#34;</span> <span class="s2">&#34;Android pass key&#34;</span> <span class="s2">&#34;IPhone key&#34;</span>
+</span></span><span class="line"><span class="cl">pass git push
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>此外，如果需要从手机端生成或添加密码并推送到服务器，需要将 pass 主机的 GnuPG 私钥导出并添加到 OpenKeychain 中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">gpg --export-secret-keys -a -o private.key
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="插件">插件</h2>
+<p>pass 的拓展功能可以通过安装插件的方式实现，插件列表请参见 <a href="https://www.passwordstore.org/#extensions"target="_blank" rel="noopener noreferrer">Extensions for pass</a> 及 <a href="https://github.com/tijn/awesome-password-store"target="_blank" rel="noopener noreferrer">Awesome password-store</a>。</p>
+<p>例如，使用插件 <a href="https://github.com/browserpass/browserpass-extension"target="_blank" rel="noopener noreferrer">browserpass</a> 即可实现在浏览器上读取 pass 密码文件并填入登陆信息。
+<img  src="https://user-images.githubusercontent.com/1177900/56079873-87057600-5dfa-11e9-8ff1-c51744c75585.gif"
+        alt/>
+在 Arch Linux 环境下安装 browserpass：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-zsh" data-lang="zsh"><span class="line"><span class="cl">yay -S browserpass browserpass-firefox
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后安装浏览器插件 <a href="https://addons.mozilla.org/zh-CN/firefox/addon/browserpass-ce/"target="_blank" rel="noopener noreferrer">Browserpass</a> 即可。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://blog.ruo-chen.wang/2021/01/pass.html"target="_blank" rel="noopener noreferrer">使用 pass 管理密码</a></p>
+<p><a href="https://wiki.archlinuxcn.org/wiki/Pass"target="_blank" rel="noopener noreferrer">ArchWiki - Pass</a></p>
+<p><a href="https://wiki.archlinux.org/title/Git_server"target="_blank" rel="noopener noreferrer">ArchWiki - Git server</a></p>
+<p><a href="https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server"target="_blank" rel="noopener noreferrer">Git on the Server - Setting Up the Server</a></p>
+<p><a href="https://www.passwordstore.org/"target="_blank" rel="noopener noreferrer">Pass: The Standard Unix Password Manager</a></p>
+<p><a href="https://www.youtube.com/watch?v=7t5M4FXqs9E"target="_blank" rel="noopener noreferrer">Self Host A Minimalist, Password Manager: Git + Command Line!</a></p></article>
+
+    
+    
+    
+    
+    <section class="article license-custom"><a rel="license" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target="_blank">
+      <img alt="CC BY-NC-SA 4.0" width=80 height=15
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAIAAAD8q9/YAAAABGdBTUEAANbY1E9YMgAAAapJREFUSMflljFPAjEUx98HsMUb2aBqdCKSToQ4cHTD9SYSx2Nw0sFOJMQB2DCBpV/hnNTFwOAEIaTxG/AV&#43;hVqtOQ8oXdybue93HBp3mvv9/7vvStADk3nxr6BH5&#43;C6NO57gDAcDi0hjHGMMYTMTbOq/dV4bCQCV3twBMxxhjH0YbMp2enxn/6Nu31ehkGrl/Uy&#43;Vycm1IKQGgfdU2IUu5bF22sgqMMDLySikJIQDAGFNKMcYAgBAipTQiV2k1rOrRw8g6F7YP&#43;/luXYxGWZ0TTknwtwN377sAMJvNtNaEEM/ztNb8yxzHUUoJIYIgMIsIo7Cq54u5dfetl7gP2s2ONVlxOUrnHwW&#43;vbsBACmlUio6tzzPo5RGq5pzjjE2US&#43;vz4vVIiH3VhnjIONSs7vnrrwJIqdQmDHm&#43;75RmHMuhNgojFIonJB7axn/qthW7B8V/uxhtOnhIAgcxwEA3/fDHqaUrtdrrXWz2aycV/bs4f2B9&#43;/huDGRGrhWr5VKpRxN6YkYI3QwGAwSgF3XPT45&#43;if/4XB09ft9K23DbRSLxWzftPJ1l86VfQA/Yr8BK4J&#43;aAAAAABJRU5ErkJggg==" />
+    </a>
+    <p>© 2020-2024 Ke1pX</p>
+  </section></div>
+
+  
+  
+    <div id="article-sidebar" class="article sidebar">
+      <button onclick="sidebarManager.toggle()">目录</button>
+      <nav id="TableOfContents">
+  <ol>
+    <li><a href="#安装-pass">安装 pass</a></li>
+    <li><a href="#生成-gnupg-密钥">生成 GnuPG 密钥</a></li>
+    <li><a href="#初始化-pass">初始化 pass</a></li>
+    <li><a href="#使用-pass">使用 pass</a>
+      <ol>
+        <li><a href="#添加密码">添加密码</a></li>
+        <li><a href="#查看密码">查看密码</a></li>
+        <li><a href="#生成密码">生成密码</a></li>
+        <li><a href="#其它操作">其它操作</a></li>
+      </ol>
+    </li>
+    <li><a href="#初始化-git-仓库">初始化 Git 仓库</a></li>
+    <li><a href="#配置-git-服务器">配置 Git 服务器</a></li>
+    <li><a href="#手机端密码同步">手机端密码同步</a></li>
+    <li><a href="#插件">插件</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ol>
+</nav>
+    </div>
+  
+</main>
+
+<div class="article bottom">
+  
+  </div></section><section id="footer"><div class="footer-wrap">
+  <p class="copyright">© 2020-2024 Ke1pX</p>
+  <p class="powerby">
+    <span>Powered by</span>
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>
+    <span>&</span>
+    <a href="https://github.com/cntrump/hugo-notepadium" target="_blank"
+      rel="noopener">Notepadium</a>
+    <span>(<a href="https://github.com/rydesun/catcat.cc" target="_blank"
+      rel="noopener">modified</a>)</span>
+  </p>
+</div>
+</section></body>
+
+</html>

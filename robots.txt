@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap:https://1e0.top/sitemap.xml

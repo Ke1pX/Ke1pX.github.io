@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.122.0"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest"><title>Nmap 信息收集笔记&nbsp;&ndash;&nbsp;Ke1pX&#39;s Blog</title>
+
+
+
+
+
+
+<style title="Normalize iconfont">.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}</style>
+
+<link rel="stylesheet" href="/css/core.d8b6012c0ed15bd9522f2a69ab4af7a47749039b662fab09ba21fb89493571df846ceb54b5873666597cbc974e9fa568.css" integrity="sha384-2LYBLA7RW9lSLyppq0r3pHdJA5tmL6sJuiH7iUk1cd&#43;EbOtUtYc2Zll8vJdOn6Vo">
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Nmap 信息收集笔记" />
+<meta name="description" content="常用 Nmap 命令组合，或使用 RustScan 替代">
+
+
+<script src="/js/base.1351f9b51f82311528d10cabf8d525eb8b4b2d730ae2a75b44fe3edf08b098afa085f8fed4229ecfee34317a18e71808.js" defer integrity="sha384-E1H5tR&#43;CMRUo0Qyr&#43;NUl64tLLXMK4qdbRP4&#43;3wiwmK&#43;ghfj&#43;1CKez&#43;40MXoY5xgI"></script>
+<script>(() => {
+  // <stdin>
+  remark_config = {
+    host: void 0,
+    locale: void 0,
+    no_footer: true,
+    components: []
+    // 改成在相应页面手动打开
+  };
+  if (void 0) {
+    remark_config.site_id = void 0;
+  }
+  if (void 0) {
+    remark_config.url = void 0 + window.location.pathname;
+  }
+  if (void 0) {
+    remark_config.theme = void 0;
+  }
+})();
+</script>
+
+
+
+
+<script>remark_config.components = ["embed"]</script>
+
+
+<script src="/js/post.66b3fd96095efd44a25bff6070506c8bf4cca83a86019bf994a08b2f9993f47d25e0864c4ac0d05e2e467b4b8016e1c9.js"defer
+  integrity="sha384-ZrP9lgle/USiW/9gcFBsi/TMqDqGAZv5lKCLL5mT9H0l4IZMSsDQXi5Ge0uAFuHJ"></script>
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "BlogPosting",
+    "headline": "Nmap 信息收集笔记",
+    "author": {
+      "@type": "Person",
+      "name": "Ke1pX"
+    },
+    "datePublished":"2021-11-11",
+    "dateModified":"2021-11-11"}
+</script>
+
+
+  <link rel="alternate" type="application/rss+xml" href="/index.xml" title="Ke1pX&#39;s Blog">
+
+
+
+<script>!function(e,n){for(var o=0;o<e.length;o++){var r=n.createElement("script"),c=".js",d=n.head||n.body;"noModule"in r?(r.type="module",c=".mjs"):r.async=!0,r.defer=!0,r.src=remark_config.host+"/web/"+e[o]+c,d.appendChild(r)}}(remark_config.components||["embed"],document);
+</script>
+<body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Ke1pX's Blog</span></a></span>
+        <span class="header right-side">
+<div class="nav wrap">
+  <nav class="nav"><a class="nav item link" href="/archives/"title="归档">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-box-archive"></use>
+        </svg>
+        <span>Archives</span>
+      </a><a class="nav item link" href="/about/"title="关于我">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-user"></use>
+        </svg>
+        <span>About</span>
+      </a><a class="nav item link" href="/index.xml"title="">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-rss-square"></use>
+        </svg>
+        <span>RSS</span>
+      </a><button id="theme-changer" class="nav item"
+      onclick="themeManager.setNextTheme()" title="切换主题">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-lightbulb"></use>
+      </svg>
+    </button>
+  </nav>
+</div>
+</span></div></section><section id="content">
+
+
+<main id="article-and-sidebar">
+  <div class="article-container"><section class="article header">
+    <h1 class="article title">Nmap 信息收集笔记</h1><p class="article date">2021 年 11 月 11 日<span class="reading-time"> • 预计阅读时间 1 分钟</span></p></section><article class="article markdown-body"><p>常用 Nmap 命令组合，或使用 <a href="https://github.com/RustScan/RustScan"target="_blank" rel="noopener noreferrer">RustScan</a> 替代</p>
+<h2 id="端口扫描">端口扫描</h2>
+<p>指定以 TCP 协议且以最低 5000 的速率扫描全部端口，将结果全格式输出至 scan 目录中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nmap -sT -p- --min-rate <span class="m">5000</span> &lt;target&gt; -oA scan/ports
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>指定以 UDP 协议进行扫描，扫描常见的 20 个 UDP 端口，将结果全格式输出至 scan 目录中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nmap -sU --top-ports <span class="m">20</span> &lt;target&gt; -oA scan/udp
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="详细信息扫描">详细信息扫描</h2>
+<p>格式化扫描数据,提取开放的全部端口用于详细信息扫描</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">grep open scan/ports.nmap <span class="p">|</span> awk -F<span class="s1">&#39;/&#39;</span> <span class="s1">&#39;{print $1}&#39;</span> <span class="p">|</span> paste -sd <span class="s1">&#39;,&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>指定以 TCP 协议探测指定端口服务及版本信息，使用默认脚本进行扫描，并探测目标操作系统，最后将结果全格式输出至 scan 目录中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nmap -sT -sV -sC -O -p &lt;ports&gt; &lt;target&gt; -oA scan/services
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="漏洞脚本扫描">漏洞脚本扫描</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nmap --script<span class="o">=</span>vuln -p &lt;ports&gt; &lt;target&gt; -oA scan/vuln
+</span></span></code></pre></td></tr></table>
+</div>
+</div></article>
+
+    
+    
+    
+    
+    <section class="article license-custom"><a rel="license" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target="_blank">
+      <img alt="CC BY-NC-SA 4.0" width=80 height=15
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAIAAAD8q9/YAAAABGdBTUEAANbY1E9YMgAAAapJREFUSMflljFPAjEUx98HsMUb2aBqdCKSToQ4cHTD9SYSx2Nw0sFOJMQB2DCBpV/hnNTFwOAEIaTxG/AV&#43;hVqtOQ8oXdybue93HBp3mvv9/7vvStADk3nxr6BH5&#43;C6NO57gDAcDi0hjHGMMYTMTbOq/dV4bCQCV3twBMxxhjH0YbMp2enxn/6Nu31ehkGrl/Uy&#43;Vycm1IKQGgfdU2IUu5bF22sgqMMDLySikJIQDAGFNKMcYAgBAipTQiV2k1rOrRw8g6F7YP&#43;/luXYxGWZ0TTknwtwN377sAMJvNtNaEEM/ztNb8yxzHUUoJIYIgMIsIo7Cq54u5dfetl7gP2s2ONVlxOUrnHwW&#43;vbsBACmlUio6tzzPo5RGq5pzjjE2US&#43;vz4vVIiH3VhnjIONSs7vnrrwJIqdQmDHm&#43;75RmHMuhNgojFIonJB7axn/qthW7B8V/uxhtOnhIAgcxwEA3/fDHqaUrtdrrXWz2aycV/bs4f2B9&#43;/huDGRGrhWr5VKpRxN6YkYI3QwGAwSgF3XPT45&#43;if/4XB09ft9K23DbRSLxWzftPJ1l86VfQA/Yr8BK4J&#43;aAAAAABJRU5ErkJggg==" />
+    </a>
+    <p>© 2020-2024 Ke1pX</p>
+  </section></div>
+
+  
+  
+    <div id="article-sidebar" class="article sidebar">
+      <button onclick="sidebarManager.toggle()">目录</button>
+      <nav id="TableOfContents">
+  <ol>
+    <li><a href="#端口扫描">端口扫描</a></li>
+    <li><a href="#详细信息扫描">详细信息扫描</a></li>
+    <li><a href="#漏洞脚本扫描">漏洞脚本扫描</a></li>
+  </ol>
+</nav>
+    </div>
+  
+</main>
+
+<div class="article bottom">
+  
+  </div></section><section id="footer"><div class="footer-wrap">
+  <p class="copyright">© 2020-2024 Ke1pX</p>
+  <p class="powerby">
+    <span>Powered by</span>
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>
+    <span>&</span>
+    <a href="https://github.com/cntrump/hugo-notepadium" target="_blank"
+      rel="noopener">Notepadium</a>
+    <span>(<a href="https://github.com/rydesun/catcat.cc" target="_blank"
+      rel="noopener">modified</a>)</span>
+  </p>
+</div>
+</section></body>
+
+</html>

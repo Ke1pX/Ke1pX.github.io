@@ -1,0 +1,662 @@
+:root {
+  --color-page-background: var(--color-vendor-page-background);
+  --color-minor: var(--color-vendor-faint);
+}
+
+:root {
+  --primary-color: 215, 156, 211;
+  --primary-brighter-color: 215, 156, 211;
+  --color15: #d79cd3;
+  --color4: #fff;
+  --color9: #8652d1;
+  --color33: #8652d1;
+  --color39: #ab37aa;
+  --color10: #bc86b3;
+  --color29: #bc86b3;
+  --color35: #bc86b3;
+  --color47: rgba(215, 156, 211, 0.8);
+}
+:root .thread__collapse::after {
+  border-left-width: 2px;
+}
+
+:root .dark {
+  --primary-color: 94, 54, 85;
+  --primary-brighter-color: 94, 54, 85;
+  --color15: #5e3655;
+  --color7: #21262d;
+  --color8: #1f1f24;
+  --color19: #21262d;
+}
+
+.raw-content a {
+  text-decoration: none;
+}
+.raw-content a:hover {
+  text-decoration: underline dashed;
+  text-underline-offset: 4px;
+}
+.raw-content a:visited {
+  color: var(--color39);
+}
+
+:root {
+  /* Background */
+  /* Error */
+  /* LineTableTD */
+  /* LineTable */
+  /* LineHighlight */
+  /* LineNumbersTable */
+  /* LineNumbers */
+  /* Keyword */
+  /* KeywordConstant */
+  /* KeywordDeclaration */
+  /* KeywordNamespace */
+  /* KeywordPseudo */
+  /* KeywordReserved */
+  /* KeywordType */
+  /* NameAttribute */
+  /* NameBuiltin */
+  /* NameBuiltinPseudo */
+  /* NameClass */
+  /* NameConstant */
+  /* NameDecorator */
+  /* NameEntity */
+  /* NameException */
+  /* NameFunction */
+  /* NameLabel */
+  /* NameNamespace */
+  /* NameOther */
+  /* NameTag */
+  /* NameVariable */
+  /* NameVariableClass */
+  /* NameVariableGlobal */
+  /* NameVariableInstance */
+  /* LiteralString */
+  /* LiteralStringAffix */
+  /* LiteralStringBacktick */
+  /* LiteralStringChar */
+  /* LiteralStringDelimiter */
+  /* LiteralStringDoc */
+  /* LiteralStringDouble */
+  /* LiteralStringEscape */
+  /* LiteralStringHeredoc */
+  /* LiteralStringInterpol */
+  /* LiteralStringOther */
+  /* LiteralStringRegex */
+  /* LiteralStringSingle */
+  /* LiteralStringSymbol */
+  /* LiteralNumber */
+  /* LiteralNumberBin */
+  /* LiteralNumberFloat */
+  /* LiteralNumberHex */
+  /* LiteralNumberInteger */
+  /* LiteralNumberIntegerLong */
+  /* LiteralNumberOct */
+  /* Operator */
+  /* OperatorWord */
+  /* Punctuation */
+  /* Comment */
+  /* CommentHashbang */
+  /* CommentMultiline */
+  /* CommentSingle */
+  /* CommentSpecial */
+  /* CommentPreproc */
+  /* CommentPreprocFile */
+  /* GenericDeleted */
+  /* GenericEmph */
+  /* GenericError */
+  /* GenericHeading */
+  /* GenericInserted */
+  /* GenericOutput */
+  /* GenericPrompt */
+  /* GenericStrong */
+  /* GenericSubheading */
+  /* GenericTraceback */
+  /* GenericUnderline */
+  /* TextWhitespace */
+}
+:root pre, :root .chroma {
+  color: #24292e;
+  background-color: #f6f8fa;
+}
+:root .chroma .err {
+  color: #d73a49;
+}
+:root .chroma .lntd {
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+:root .chroma .lntable {
+  border-spacing: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  width: auto;
+  overflow: auto;
+  display: block;
+}
+:root .chroma .hl {
+  display: block;
+  width: 100%;
+  background-color: #fffbdd;
+}
+:root .chroma .lnt {
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #7f7f7f;
+}
+:root .chroma .ln {
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #7f7f7f;
+}
+:root .chroma .k {
+  color: #d73a49;
+}
+:root .chroma .kc {
+  color: #d73a49;
+}
+:root .chroma .kd {
+  color: #d73a49;
+}
+:root .chroma .kn {
+  color: #d73a49;
+}
+:root .chroma .kp {
+  color: #d73a49;
+}
+:root .chroma .kr {
+  color: #d73a49;
+}
+:root .chroma .kt {
+  color: #d73a49;
+}
+:root .chroma .na {
+  color: #6f42c1;
+}
+:root .chroma .nb {
+  color: #6f42c1;
+}
+:root .chroma .bp {
+  color: #6f42c1;
+}
+:root .chroma .nc {
+  color: #6f42c1;
+}
+:root .chroma .no {
+  color: #6f42c1;
+}
+:root .chroma .nd {
+  color: #6f42c1;
+}
+:root .chroma .ni {
+  color: #6f42c1;
+}
+:root .chroma .ne {
+  color: #6f42c1;
+}
+:root .chroma .nf {
+  color: #6f42c1;
+}
+:root .chroma .nl {
+  color: #6f42c1;
+}
+:root .chroma .nn {
+  color: #6f42c1;
+}
+:root .chroma .nx {
+  color: #22863a;
+}
+:root .chroma .nt {
+  color: #22863a;
+}
+:root .chroma .nv {
+  color: #6f42c1;
+}
+:root .chroma .vc {
+  color: #6f42c1;
+}
+:root .chroma .vg {
+  color: #6f42c1;
+}
+:root .chroma .vi {
+  color: #6f42c1;
+}
+:root .chroma .s {
+  color: #032f62;
+}
+:root .chroma .sa {
+  color: #032f62;
+}
+:root .chroma .sb {
+  color: #032f62;
+}
+:root .chroma .sc {
+  color: #032f62;
+}
+:root .chroma .dl {
+  color: #032f62;
+}
+:root .chroma .sd {
+  color: #032f62;
+}
+:root .chroma .s2 {
+  color: #032f62;
+}
+:root .chroma .se {
+  color: #032f62;
+}
+:root .chroma .sh {
+  color: #032f62;
+}
+:root .chroma .si {
+  color: #032f62;
+}
+:root .chroma .sx {
+  color: #032f62;
+}
+:root .chroma .sr {
+  color: #032f62;
+}
+:root .chroma .s1 {
+  color: #032f62;
+}
+:root .chroma .ss {
+  color: #032f62;
+}
+:root .chroma .m {
+  color: #005cc5;
+}
+:root .chroma .mb {
+  color: #005cc5;
+}
+:root .chroma .mf {
+  color: #005cc5;
+}
+:root .chroma .mh {
+  color: #005cc5;
+}
+:root .chroma .mi {
+  color: #005cc5;
+}
+:root .chroma .il {
+  color: #005cc5;
+}
+:root .chroma .mo {
+  color: #005cc5;
+}
+:root .chroma .o {
+  color: #d73a49;
+}
+:root .chroma .ow {
+  color: #d73a49;
+}
+:root .chroma .p {
+  color: #d73a49;
+}
+:root .chroma .c {
+  color: #6a737d;
+}
+:root .chroma .ch {
+  color: #6a737d;
+}
+:root .chroma .cm {
+  color: #6a737d;
+}
+:root .chroma .c1 {
+  color: #6a737d;
+}
+:root .chroma .cs {
+  color: #6a737d;
+}
+:root .chroma .cp {
+  color: #6a737d;
+}
+:root .chroma .cpf {
+  color: #6a737d;
+}
+:root .chroma .gd {
+  color: #6f42c1;
+  background-color: #ffdddd;
+}
+:root .chroma .ge {
+  color: #6f42c1;
+}
+:root .chroma .gr {
+  color: #aa0000;
+}
+:root .chroma .gh {
+  color: #6a737d;
+}
+:root .chroma .gi {
+  color: #6f42c1;
+  background-color: #ddffdd;
+}
+:root .chroma .go {
+  color: #888888;
+}
+:root .chroma .gp {
+  color: #555555;
+}
+:root .chroma .gu {
+  color: #aaaaaa;
+}
+:root .chroma .gt {
+  color: #aa0000;
+}
+:root .chroma .gl {
+  text-decoration: underline;
+}
+:root .chroma .w {
+  color: #bbbbbb;
+}
+:root .chroma {
+  background-color: #efecf4;
+}
+:root .dark {
+  /* Background */
+  /* Error */
+  /* LineTableTD */
+  /* LineTable */
+  /* LineHighlight */
+  /* LineNumbersTable */
+  /* LineNumbers */
+  /* Keyword */
+  /* KeywordConstant */
+  /* KeywordDeclaration */
+  /* KeywordNamespace */
+  /* KeywordPseudo */
+  /* KeywordReserved */
+  /* KeywordType */
+  /* Name */
+  /* NameAttribute */
+  /* NameBuiltin */
+  /* NameBuiltinPseudo */
+  /* NameClass */
+  /* NameConstant */
+  /* NameDecorator */
+  /* NameEntity */
+  /* NameException */
+  /* NameFunction */
+  /* NameFunctionMagic */
+  /* NameLabel */
+  /* NameNamespace */
+  /* NameOther */
+  /* NameProperty */
+  /* NameTag */
+  /* NameVariable */
+  /* NameVariableClass */
+  /* NameVariableGlobal */
+  /* NameVariableInstance */
+  /* NameVariableMagic */
+  /* Literal */
+  /* LiteralDate */
+  /* LiteralString */
+  /* LiteralStringAffix */
+  /* LiteralStringBacktick */
+  /* LiteralStringChar */
+  /* LiteralStringDelimiter */
+  /* LiteralStringDoc */
+  /* LiteralStringDouble */
+  /* LiteralStringEscape */
+  /* LiteralStringHeredoc */
+  /* LiteralStringInterpol */
+  /* LiteralStringOther */
+  /* LiteralStringRegex */
+  /* LiteralStringSingle */
+  /* LiteralStringSymbol */
+  /* LiteralNumber */
+  /* LiteralNumberBin */
+  /* LiteralNumberFloat */
+  /* LiteralNumberHex */
+  /* LiteralNumberInteger */
+  /* LiteralNumberIntegerLong */
+  /* LiteralNumberOct */
+  /* Operator */
+  /* OperatorWord */
+  /* Punctuation */
+  /* Comment */
+  /* CommentHashbang */
+  /* CommentMultiline */
+  /* CommentSingle */
+  /* CommentSpecial */
+  /* CommentPreproc */
+  /* CommentPreprocFile */
+  /* GenericHeading */
+  /* GenericDeleted */
+  /* GenericInserted */
+}
+:root .dark pre, :root .dark .chroma {
+  color: rgba(255, 255, 255, 0.85);
+  background-color: #1f1f24;
+}
+:root .dark .chroma .err {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .lntd {
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+:root .dark .chroma .lntable {
+  border-spacing: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  width: auto;
+  overflow: auto;
+  display: block;
+}
+:root .dark .chroma .hl {
+  display: block;
+  width: 100%;
+  background-color: #23252B;
+}
+:root .dark .chroma .lnt {
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #747478;
+}
+:root .dark .chroma .ln {
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #747478;
+}
+:root .dark .chroma .k {
+  color: #FC5FA3;
+}
+:root .dark .chroma .kc {
+  color: #FC5FA3;
+}
+:root .dark .chroma .kd {
+  color: #FC5FA3;
+}
+:root .dark .chroma .kn {
+  color: #FC5FA3;
+}
+:root .dark .chroma .kp {
+  color: #FC5FA3;
+}
+:root .dark .chroma .kr {
+  color: #FC5FA3;
+}
+:root .dark .chroma .kt {
+  color: #FC5FA3;
+}
+:root .dark .chroma .n {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .na {
+  color: #A167E6;
+}
+:root .dark .chroma .nb {
+  color: #FC5FA3;
+}
+:root .dark .chroma .bp {
+  color: #A167E6;
+}
+:root .dark .chroma .nc {
+  color: #D0A8FF;
+}
+:root .dark .chroma .no {
+  color: #A167E6;
+}
+:root .dark .chroma .nd {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .ni {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .ne {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .nf {
+  color: #D0A8FF;
+}
+:root .dark .chroma .fm {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .nl {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .nn {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .nx {
+  color: #D0A8FF;
+}
+:root .dark .chroma .py {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .nt {
+  color: #FC5FA3;
+}
+:root .dark .chroma .nv {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .vc {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .vg {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .vi {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .vm {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .l {
+  color: #D0BF69;
+}
+:root .dark .chroma .ld {
+  color: #D0BF69;
+}
+:root .dark .chroma .s {
+  color: #FC6A5D;
+}
+:root .dark .chroma .sa {
+  color: #FC6A5D;
+}
+:root .dark .chroma .sb {
+  color: #FC6A5D;
+}
+:root .dark .chroma .sc {
+  color: #D0BF69;
+}
+:root .dark .chroma .dl {
+  color: #FC6A5D;
+}
+:root .dark .chroma .sd {
+  color: #FC6A5D;
+}
+:root .dark .chroma .s2 {
+  color: #FC6A5D;
+}
+:root .dark .chroma .se {
+  color: #FC6A5D;
+}
+:root .dark .chroma .sh {
+  color: #FC6A5D;
+}
+:root .dark .chroma .si {
+  color: #FC6A5D;
+}
+:root .dark .chroma .sx {
+  color: #FC6A5D;
+}
+:root .dark .chroma .sr {
+  color: #FC6A5D;
+}
+:root .dark .chroma .s1 {
+  color: #FC6A5D;
+}
+:root .dark .chroma .ss {
+  color: #FC6A5D;
+}
+:root .dark .chroma .m {
+  color: #D0BF69;
+}
+:root .dark .chroma .mb {
+  color: #D0BF69;
+}
+:root .dark .chroma .mf {
+  color: #D0BF69;
+}
+:root .dark .chroma .mh {
+  color: #D0BF69;
+}
+:root .dark .chroma .mi {
+  color: #D0BF69;
+}
+:root .dark .chroma .il {
+  color: #D0BF69;
+}
+:root .dark .chroma .mo {
+  color: #D0BF69;
+}
+:root .dark .chroma .o {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .ow {
+  color: rgba(255, 255, 255, 0.85);
+}
+:root .dark .chroma .p {
+  color: #67B7A4;
+}
+:root .dark .chroma .c {
+  color: #6C7986;
+}
+:root .dark .chroma .ch {
+  color: #6C7986;
+}
+:root .dark .chroma .cm {
+  color: #6C7986;
+}
+:root .dark .chroma .c1 {
+  color: #6C7986;
+}
+:root .dark .chroma .cs {
+  color: #6C7986;
+}
+:root .dark .chroma .cp {
+  color: #92A1B1;
+}
+:root .dark .chroma .cpf {
+  color: #92A1B1;
+}
+:root .dark .chroma .gh {
+  color: #52a3ff;
+}
+:root .dark .chroma .gd {
+  color: #e76a72;
+  background-color: rgba(231, 106, 114, 0.05);
+}
+:root .dark .chroma .gi {
+  color: #74dc8d;
+  background-color: rgba(71, 209, 104, 0.05);
+}

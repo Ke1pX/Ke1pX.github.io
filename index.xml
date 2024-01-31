@@ -1,0 +1,1972 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ke1pX&#39;s Blog</title>
+    <link>https://1e0.top/</link>
+    <description>Recent content on Ke1pX&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>© 2020-2024 Ke1pX</copyright>
+    <lastBuildDate>Sun, 18 Dec 2022 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://1e0.top/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用 pass 密码管理器</title>
+      <link>https://1e0.top/post/pass/</link>
+      <pubDate>Sun, 18 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/pass/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;pass&lt;/strong&gt; 是一款命令行密码管理器，&lt;code&gt;pass&lt;/code&gt; 中的密码都保存在单独的 &lt;code&gt;GnuPG&lt;/code&gt; 加密文件中。这些加密文件以树状结构展示，可以从一台计算机复制到另一台计算机，并通过命令行程序管理密码。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;pass&lt;/code&gt; 中所有密码都位于 &lt;code&gt;~/.password-store&lt;/code&gt; 目录下，可以使用 &lt;code&gt;git&lt;/code&gt; 将该目录设为 Git Repository 以自动跟踪密码操作。&lt;/p&gt;
+&lt;p&gt;主页：&lt;a href=&#34;https://www.passwordstore.org/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;https://www.passwordstore.org/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;开源代码：&lt;a href=&#34;https://git.zx2c4.com/password-store&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;https://git.zx2c4.com/password-store&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;安装-pass&#34;&gt;安装 pass&lt;/h2&gt;
+&lt;p&gt;Arch Linux 环境下只需要输入 &lt;code&gt;sudo pacman -S pass&lt;/code&gt; 即可，同时会安装依赖包 gnupg、git、tree 。其他环境的安裝方式可以参考&lt;a href=&#34;https://www.passwordstore.org/#download&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;官方说明&lt;/a&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo pacman -S pass
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;生成-gnupg-密钥&#34;&gt;生成 GnuPG 密钥&lt;/h2&gt;
+&lt;p&gt;在初始化 pass 之前，需要配置好 &lt;a href=&#34;https://zh.wikipedia.org/zh-cn/GnuPG&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;GnuPG&lt;/a&gt; 密钥，且密钥信任程度（trust level）必须为 &lt;code&gt;ultimate&lt;/code&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;参考 - &lt;a href=&#34;https://wiki.archlinux.org/title/GnuPG#Create_a_key_pair&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;ArchWiki - Create a key pair&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;gpg --full-gen-key
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;初始化-pass&#34;&gt;初始化 pass&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass init &amp;lt;gpg-id or email&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;使用-pass&#34;&gt;使用 pass&lt;/h2&gt;
+&lt;h3 id=&#34;添加密码&#34;&gt;添加密码&lt;/h3&gt;
+&lt;p&gt;使用 &lt;code&gt;pass insert&lt;/code&gt; 命令添加一个邮箱密码，命令执行后要求输入两次邮箱密码接着会以指定的文件层级创建目录存放加密后的密码文件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass insert Email/abc-proton.me
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Password Store
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;└── Email
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    └── abc-proton.me
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;查看密码&#34;&gt;查看密码&lt;/h3&gt;
+&lt;p&gt;使用 &lt;code&gt;pass Email/abc-proton.me&lt;/code&gt; 或 &lt;code&gt;pass show Email/abc-proton.me&lt;/code&gt; 命令查看密码之前添加的密码，查看密码会要求输入 GnuPG 密钥的密码进行身份验证。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass Email/abc-proton.me
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;abc
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass -c Email/abc-proton.me
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Copied Email/abc-proton.me to clipboard. Will clear in &lt;span class=&#34;m&#34;&gt;45&lt;/span&gt; seconds.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;查看密码操作会默认将密码打印到终端，可以使用 &lt;code&gt;-c&lt;/code&gt; 参数将密码复制到剪贴板，密码会在 45 秒后从剪贴板清除。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;生成密码&#34;&gt;生成密码&lt;/h3&gt;
+&lt;p&gt;例如，使用 &lt;code&gt;pass generate Servers/tokyo01-root&lt;/code&gt; 命令生成一个 16 位的密码。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass generate Servers/tokyo01-root &lt;span class=&#34;m&#34;&gt;16&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mkdir: created directory &lt;span class=&#34;s1&#34;&gt;&amp;#39;/home/$USERNAME/.password-store/Servers&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;The generated password &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; Servers/tokyo01-root is:
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;O6BZv&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;W+:^F#h7IC
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;It&amp;rsquo;s possible to generate passwords with no symbols using &lt;code&gt;--no-symbols&lt;/code&gt; or &lt;code&gt;-n&lt;/code&gt;, and we can copy it to the clipboard instead of displaying it at the console using &lt;code&gt;--clip&lt;/code&gt; or &lt;code&gt;-c&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;- &lt;a href=&#34;https://www.passwordstore.org/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;passwordstore.org&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;其它操作&#34;&gt;其它操作&lt;/h3&gt;
+&lt;p&gt;使用 &lt;code&gt;pass edit&lt;/code&gt;、&lt;code&gt;pass rm&lt;/code&gt; 、&lt;code&gt;pass cp&lt;/code&gt; 、&lt;code&gt;pass mv&lt;/code&gt;、&lt;code&gt;pass find&lt;/code&gt; 等命令分别对密码文件进行编辑、删除、复制、剪切、查找操作，可使用命令 &lt;code&gt;man pass&lt;/code&gt; 查看帮助信息。&lt;/p&gt;
+&lt;h2 id=&#34;初始化-git-仓库&#34;&gt;初始化 Git 仓库&lt;/h2&gt;
+&lt;p&gt;pass 支持使用 Git 对密码进行版本控制，为了方便我的手机及其它主机同步密码，我还需要配置一个私人 Git 服务器。&lt;/p&gt;
+&lt;p&gt;使用命令对 pass 主目录 &lt;code&gt;~/.password-store&lt;/code&gt; 执行初始化操作。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass git init
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;配置-git-服务器&#34;&gt;配置 Git 服务器&lt;/h2&gt;
+&lt;p&gt;Arch Linux 环境下配置 Git 服务器，需要将 git 用户过期日期设置为永不过期，重新启用 git 用户，再为 git 用户设置密码。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo chage -E -1 git
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo passwd git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;grep git /etc/passwd
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git:x:974:974:git daemon user:/srv/git:/usr/bin/git-shell
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Arch Linux 环境下 git 用户的登陆 shell 被设置为了 git-shell，这是一个受限制的 shell 且无法进行 SSH 登陆，详情参考：&lt;a href=&#34;https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Git on the Server - Setting Up the Server&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;为了使 SSH 能够读取到文件 &lt;code&gt;.ssh/authorized_keys&lt;/code&gt; ，需要将 git 用户的主目录变更为 &lt;code&gt;/srv/git&lt;/code&gt;，并手动创建文件 &lt;code&gt;.ssh/authorized_keys&lt;/code&gt; 将客户端 SSH 公钥写入 git 用户的 &lt;code&gt;.ssh/authorized_keys&lt;/code&gt; 文件中，以确保客户端可以执行推送和拉取操作。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo mkdir -p /srv/git
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo usermod git -d /srv/git
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /srv/git
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo mkdir .ssh &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo chmod &lt;span class=&#34;m&#34;&gt;700&lt;/span&gt; .ssh
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo touch .ssh/authorized_keys &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo chmod &lt;span class=&#34;m&#34;&gt;600&lt;/span&gt; .ssh/authorized_keys
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo bash -c &lt;span class=&#34;s2&#34;&gt;&amp;#34;cat /home/&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$USERNAME&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;/.ssh/id_rsa.pub &amp;gt;&amp;gt; /srv/git/.ssh/authorized_keys&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo bash -c &lt;span class=&#34;s2&#34;&gt;&amp;#34;cat /data/Share/key/phonessh.asc &amp;gt;&amp;gt; /srv/git/.ssh/authorized_keys&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;初始化一个 bare 的 Git 远程仓库，并配置目录权限。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo git init --bare passwordstore.git
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo chown -R git:git /srv/git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;为 pass 添加远程仓库（passwordstore.git），最后将 pass 的密码文件推送至远程仓库，且确保 SSH 服务已正常启动即可。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass git remote add origin git@localhost:/srv/git/passwordstore.git
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass git push -u origin master
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;systemctl status sshd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;至此，Git 服务器的基础配置就完成了，后续其它客户端只需要上传 SSH 公钥到 Git 服务器就可以通过这个仓库同步密码啦～&lt;/p&gt;
+&lt;h2 id=&#34;手机端密码同步&#34;&gt;手机端密码同步&lt;/h2&gt;
+&lt;p&gt;安卓手机使用 &lt;a href=&#34;https://f-droid.org/packages/dev.msfjarvis.aps/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Password Store&lt;/a&gt; 作为 pass 客户端，另外还需要使用 &lt;a href=&#34;https://f-droid.org/packages/org.sufficientlysecure.keychain/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;OpenKeychain&lt;/a&gt; 以生成和管理 GnuPG 密钥，更直观的操作可以参考 YouTube 视频：&lt;a href=&#34;https://www.youtube.com/watch?v=7t5M4FXqs9E&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Self Host A Minimalist, Password Manager: Git + Command Line!&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;IOS 则使用 &lt;a href=&#34;https://mssun.github.io/passforios/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Pass for iOS&lt;/a&gt; 作为客户端，客户端需要生成一对密钥以加解密密码文件，我使用安卓手机上已安装的 &lt;a href=&#34;https://f-droid.org/packages/org.sufficientlysecure.keychain/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;OpenKeychain&lt;/a&gt; 为 IPhone 生成 PGP 密钥，接着将密钥备份到 pass 主机，再使用备份密码解密密钥备份文件获取密钥信息，参考 - &lt;a href=&#34;https://code.luasoftware.com/tutorials/android-app/export-android-openkeychain-private-key-to-pc&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Export Android Openkeychain/PGP Private Key to PC using GunPG (Linux)&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;然后将 IPhone 的公钥导入 pass 主机，编辑信任度为 &lt;code&gt;绝对信任&lt;/code&gt; 重新初始化 pass，最后推送到 Git 服务器， IPhone 上配置 &lt;a href=&#34;https://mssun.github.io/passforios/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Pass for iOS&lt;/a&gt; 导入公钥和私钥后拉取密码文件即可。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;gpg --decrypt /data/Share/key/backup_2022-12-18.sec.pgp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;gpg --import /data/Share/key/iphoneSE.asc
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;gpg --edit-key &lt;span class=&#34;s2&#34;&gt;&amp;#34;IPhone key&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass init &lt;span class=&#34;s2&#34;&gt;&amp;#34;PC Pass Key&amp;#34;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Android pass key&amp;#34;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;IPhone key&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pass git push
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;此外，如果需要从手机端生成或添加密码并推送到服务器，需要将 pass 主机的 GnuPG 私钥导出并添加到 OpenKeychain 中。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;gpg --export-secret-keys -a -o private.key
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;插件&#34;&gt;插件&lt;/h2&gt;
+&lt;p&gt;pass 的拓展功能可以通过安装插件的方式实现，插件列表请参见 &lt;a href=&#34;https://www.passwordstore.org/#extensions&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Extensions for pass&lt;/a&gt; 及 &lt;a href=&#34;https://github.com/tijn/awesome-password-store&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Awesome password-store&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;例如，使用插件 &lt;a href=&#34;https://github.com/browserpass/browserpass-extension&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;browserpass&lt;/a&gt; 即可实现在浏览器上读取 pass 密码文件并填入登陆信息。
+&lt;img  src=&#34;https://user-images.githubusercontent.com/1177900/56079873-87057600-5dfa-11e9-8ff1-c51744c75585.gif&#34;
+        alt/&gt;
+在 Arch Linux 环境下安装 browserpass：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-zsh&#34; data-lang=&#34;zsh&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;yay -S browserpass browserpass-firefox
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;最后安装浏览器插件 &lt;a href=&#34;https://addons.mozilla.org/zh-CN/firefox/addon/browserpass-ce/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Browserpass&lt;/a&gt; 即可。&lt;/p&gt;
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.ruo-chen.wang/2021/01/pass.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;使用 pass 管理密码&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wiki.archlinuxcn.org/wiki/Pass&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;ArchWiki - Pass&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wiki.archlinux.org/title/Git_server&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;ArchWiki - Git server&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Git on the Server - Setting Up the Server&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.passwordstore.org/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Pass: The Standard Unix Password Manager&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=7t5M4FXqs9E&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Self Host A Minimalist, Password Manager: Git + Command Line!&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Nmap 信息收集笔记</title>
+      <link>https://1e0.top/post/nmap-note/</link>
+      <pubDate>Thu, 11 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/nmap-note/</guid>
+      <description>&lt;p&gt;常用 Nmap 命令组合，或使用 &lt;a href=&#34;https://github.com/RustScan/RustScan&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;RustScan&lt;/a&gt; 替代&lt;/p&gt;
+&lt;h2 id=&#34;端口扫描&#34;&gt;端口扫描&lt;/h2&gt;
+&lt;p&gt;指定以 TCP 协议且以最低 5000 的速率扫描全部端口，将结果全格式输出至 scan 目录中&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nmap -sT -p- --min-rate &lt;span class=&#34;m&#34;&gt;5000&lt;/span&gt; &amp;lt;target&amp;gt; -oA scan/ports
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;指定以 UDP 协议进行扫描，扫描常见的 20 个 UDP 端口，将结果全格式输出至 scan 目录中&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nmap -sU --top-ports &lt;span class=&#34;m&#34;&gt;20&lt;/span&gt; &amp;lt;target&amp;gt; -oA scan/udp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;详细信息扫描&#34;&gt;详细信息扫描&lt;/h2&gt;
+&lt;p&gt;格式化扫描数据,提取开放的全部端口用于详细信息扫描&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;grep open scan/ports.nmap &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk -F&lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $1}&amp;#39;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; paste -sd &lt;span class=&#34;s1&#34;&gt;&amp;#39;,&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;指定以 TCP 协议探测指定端口服务及版本信息，使用默认脚本进行扫描，并探测目标操作系统，最后将结果全格式输出至 scan 目录中&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nmap -sT -sV -sC -O -p &amp;lt;ports&amp;gt; &amp;lt;target&amp;gt; -oA scan/services
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;漏洞脚本扫描&#34;&gt;漏洞脚本扫描&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nmap --script&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;vuln -p &amp;lt;ports&amp;gt; &amp;lt;target&amp;gt; -oA scan/vuln
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Wargame-Bandit Lv 29-33</title>
+      <link>https://1e0.top/post/bandit05/</link>
+      <pubDate>Tue, 18 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/bandit05/</guid>
+      <description>&lt;h1 id=&#34;关卡&#34;&gt;关卡&lt;/h1&gt;
+&lt;h2 id=&#34;level-29---30&#34;&gt;Level 29 - 30&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There is a git repository at ssh://bandit29-git@localhost/home/bandit29-git/repo. The password for the user bandit29-git is the same as for the user bandit29.&lt;/p&gt;
+&lt;p&gt;Clone the repository and find the password for the next level.&lt;/p&gt;
+&lt;p&gt;Level 29 - 30&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示说明有一个 git 仓库，用户 bandit29-git 的密码与当前关卡 (bandit29) 的密码相同，克隆仓库找到下一关卡密码。&lt;/p&gt;
+&lt;p&gt;因此我们需要在 /tmp 目录下创建一个用来克隆仓库的目录&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;仓库地址：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh://bandit29-git@localhost/home/bandit29-git/repo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls -ld 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mkdir /tmp/bandit30
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /tmp/bandit30
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git clone ssh://bandit29-git@localhost/home/bandit29-git/repo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img53.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;查看这个仓库下的 README.md 文件，发现 bandit30 的 passord 显示没有密码产生&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; repo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat README.md
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img54.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;查看 git 修改日志也没有发现密码项的修改记录&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git show 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img55.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;查看这个仓库中的所有分支，显示有四个分支。我们切换到这个分支并查看这个分支下的 README.md 文件，获取到密码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git branch -a
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git checkout dev
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat README.md
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img56.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-30---31&#34;&gt;Level 30 - 31&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There is a git repository at ssh://bandit30-git@localhost/home/bandit30-git/repo. The password for the user bandit30-git is the same as for the user bandit30.&lt;/p&gt;
+&lt;p&gt;Clone the repository and find the password for the next level.&lt;/p&gt;
+&lt;p&gt;—Level 30 - 31&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;同样需要克隆一个 git 仓库，bandit30-git 的密码为当前关卡的密码。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;仓库地址：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh://bandit30-git@localhost/home/bandit30-git/repo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;查看 README.md 文件，显示只是一个空文件。在查看 git 日志或查看分支并没有发现其它线索后查看 git 标签( git 能够将仓库中特有的提交标记)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;参考：&lt;/strong&gt;&lt;a href=&#34;https://mirrors.edge.kernel.org/pub/software/scm/git/docs/git-show-ref.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;https://mirrors.edge.kernel.org/pub/software/scm/git/docs/git-show-ref.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;查看到有为秘密字样 (secret) 的标签，使用 git shwo 查看这个标签，获取 bandit31 登陆密码。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat README.md
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git tags
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git show secret
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img57.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-31---32&#34;&gt;Level 31 - 32&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There is a git repository at ssh://bandit31-git@localhost/home/bandit31-git/repo. The password for the user bandit31-git is the same as for the user bandit31.&lt;/p&gt;
+&lt;p&gt;Clone the repository and find the password for the next level.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;—Level 31 - 32&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示如上，需要克隆一个 git 仓库，bandit31-git 的密码为当前关卡的密码&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;仓库地址：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh://bandit31-git@localhost/home/bandit31-git/repo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;查看 README.md 文件提示需要创建一个 key.txt 然后推送到远程仓库中，文件内容为：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;May I come in?
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img58.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;将这段内容输出重定向到 key.txt 文件，将文件添加到索引并提交本次改动本地 git 库然后将文件推送到远端仓库 ( origin 分支)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;May I come in?&amp;#34;&lt;/span&gt; &amp;gt; key.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git add -f key.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git commit -m &lt;span class=&#34;s2&#34;&gt;&amp;#34;.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git push origin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img59.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;获取密码&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img60.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-32---33&#34;&gt;Level 32 - 33&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;After all this git stuff its time for another escape. Good luck!&lt;/p&gt;
+&lt;p&gt;—Level 32 - 33&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我们得到的提示是，让我们进行另一种逃脱～&lt;/p&gt;
+&lt;p&gt;进入到 bandit32 关卡，登录提示显示 — 欢迎使用大写字母。我们尝试输入 ls 命令，显示命令未找到，原来它将我们输入的命令全部转换成了大写。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img61.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;那么得尝试用其他方法对输入的命令进行转义或绕过，最后看其他作者的 WP 发现输入特殊变量 $0 即可绕过($0：表示当前脚本的文件名)。发现当前身份是 bandit33，直接查看 bandit33 的密码。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Shell 特殊变量：&lt;/strong&gt;&lt;a href=&#34;http://c.biancheng.net/cpp/view/2739.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;http://c.biancheng.net/cpp/view/2739.html&lt;/a&gt;&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img62.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;但是为啥我们输入的 $0 时(相当于输入这个 shell 的文件名)不对其进行大写转换最终执行成功呢？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;答：&lt;/strong&gt; 输入 $0 命令，脚本会将其转换为大写 $0，$0 的大写就是 $0 :( 由于 $0 代表当前脚本的名称，执行 $0 就相当于重新运行脚本本身。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在绕过 bandit32 这个 shell 之后，注意到 bandit32 使用 shell 的权限所属用户是 bandit33 且设置了 SUID(Set UID)，当前身份也是 bandit33，bandit33 用户使用的 shell 为 bash。&lt;/p&gt;
+&lt;p&gt;经分析，由于 bandit32 登陆的 shell 被设置为了 uppreshell shell，新的 shell 进程都会使用 uppreshell shell，又因为 uppreshell shell 权限所属者为 bandit33，设有 SUID 特殊权限，当执行命令 $0(sh 命令) 后 shell 进程实际上是以 bandit33 的身份运行的，bandit33 身份运行的 shell 进程自然就是 bash shell 啦。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img64.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;最后使用密码登录到 bandit33 关卡：&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img63.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;game over ～&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Wargame-Bandit Lv 24-29</title>
+      <link>https://1e0.top/post/bandit04/</link>
+      <pubDate>Mon, 17 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/bandit04/</guid>
+      <description>&lt;h2 id=&#34;level-24---25&#34;&gt;Level 24 - 25&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.&lt;/p&gt;
+&lt;p&gt;—Level 24 - 25&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;根据提示，我们得知在本地端口 30002 上运行着一个后台进程，需要提供这一关卡的密码 (bandit24) 和一个 4 位数的密码(该密码需要进行暴力破解)来获取下一关卡密码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nc localhost &lt;span class=&#34;m&#34;&gt;30002&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img38.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;既然如此我们可以编写一个 shell 脚本生成一个密码字典然后向这个端口提供密码即可，同样的我们这个目录下没有权限创建文件，因此在 /tmp 目录下创建一个目录进行 shell 脚本的编写&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls -ld
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mkdir /tmp/25p
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;vi passwd.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img39.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;创建一个 passwd 的变量将我们当前关卡的密码作为值，然后创建一个 for 循环遍历 0000 到 9999 所有组合，使用 enho 命令拼接当前密码和 4 位数字组合将输出的结果追加到 output.txt 文件中&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;#! /bin/bash                                                                          
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;passwd&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; i in &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;0000..9999&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;              
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$passwd&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$i&lt;/span&gt; &amp;gt;&amp;gt; output.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;查看文件权限并赋予执行权，运行脚本生成密码字典，使用使用管道操作将查看字典输出提供到这个端口再将结果追加到一个文本文件中。查看该文件对输出结果排序，使用密码连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls -l
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;chmod &lt;span class=&#34;m&#34;&gt;744&lt;/span&gt; passwd.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./passwd.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls -l
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat output.txt &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; nc localhost &lt;span class=&#34;m&#34;&gt;30002&lt;/span&gt; &amp;gt;&amp;gt; pp25.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat pp25.txt &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; sort &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; uniq -u
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit25@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img40.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-25---26&#34;&gt;Level 25 - 26&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Logging in to bandit26 from bandit25 should be fairly easy… The shell for user bandit26 is not /bin/bash, but something else. Find out what it is, how it works and how to break out of it.&lt;/p&gt;
+&lt;p&gt;—Level 25 - 26&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;进入到 bandit25 关卡，ls 看看当前目录下存在一个私钥，尝试使用其登录到下一关卡，发现刚一进去会话就被关闭了使用 -T 选项也没作用。查看提示说 bandit26 的 shell 并不是 /bin/bash&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img41.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;那么查看一下 /etc/passwd 文件，发现果然不是 bin/bash 这个 shell。查看 showtext 这个 shell 脚本发现含有一个 more 命令查看 ～/text.txt 文件的操作，也就是说登陆到 bandit26 时系统执行这个脚本作为用户登陆的 shell，接着执行 more ~/text.txt 命令按页显示文件内容，最后退出，这样我们的会话也就断开了。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;more 是一个 shell 命令，允许以交互模式显示文件。一般情况下，这种交互模式仅在文件内容太大而无法在终端窗口中完全显示时使用。交互模式下允许按 v 键在编辑器 &amp;ldquo;vi&amp;rdquo; 中打开文件。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img42.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;但我们在登录时怎么直接退出了呢？并没有在 more 的交互模式下浏览文件？看了其他作者的 WP，原因是 more 的内容太少了，意味着 more 直接全部显示了文本内容，不需要进入交互模式。所以我们可以将终端缩小一点让 more 无法在当前大小的终端下完全显示文本内容而进入交互模式。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img43.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;接下来可以在 more 命令下启用 vi，在 vi 中执行命令(按 v 键 调用 vi 编辑器), 输入冒号 (:) 后接上要执行的命令，之后按回车键执行&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.runoob.com/linux/linux-comm-more.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;有关 more 命令&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;调用 bash 这个 shell&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;shell&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img44.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;使用 sh 命令，切换到 bash 这个 shell 中&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img45.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;ok～，查看这一关卡的密码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /etc/bandit_pass/bandit26
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img46.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-26---27&#34;&gt;Level 26 - 27&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Good job getting a shell! Now hurry and grab the password for bandit27!&lt;/p&gt;
+&lt;p&gt;—Level 26 - 27&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;直接查看当前目录下的有那些文件且文件权限吧，发现有个名为 bandit27-do 的可执行文件且设置文件所属用户的 x 位(执行权限)为特殊权限 (S)，那么还是利用这个文件查看 /etc/bandi_pass/ 目录下 bandit27 的密码就好啦&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls -l
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./bandit27-do whoami
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./bandit27-do cat /etc/bandit_pass/bandit27
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit27@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img47.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-27---28&#34;&gt;Level 27 - 28&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There is a git repository at ssh://bandit27-git@localhost/home/bandit27-git/repo. The password for the user bandit27-git is the same as for the user bandit27.&lt;/p&gt;
+&lt;p&gt;Clone the repository and find the password for the next level.&lt;/p&gt;
+&lt;p&gt;—Level 27 -28&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示存在一个 git 仓库且用户 bandit27-git 的密码与当前用户 bandit27 的密码相同，克隆这个仓库找到下一关卡密码。&lt;/p&gt;
+&lt;p&gt;仓库地址:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh://bandit27-git@localhost/home/bandit27-git/repo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;常用 Git 命令清单&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;我们需要创建一个目录克隆这个仓库，显然在当前目录下无法进行，在 /tmp 目录下创建一个 bandit28 的目录然后克隆这个仓库，查看文件找到下一关卡密码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mkdir /tmp/bandit28
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /tmp/bandit28
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git clone ssh://bandit27-git@localhost/home/bandit27-git/repo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; repo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat README
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit28@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img48.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-28---29&#34;&gt;Level 28 - 29&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There is a git repository at ssh://bandit28-git@localhost/home/bandit28-git/repo. The password for the user bandit28-git is the same as for the user bandit28.&lt;/p&gt;
+&lt;p&gt;Clone the repository and find the password for the next level.&lt;/p&gt;
+&lt;p&gt;—level 28 -29&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示与上一关卡类似，需要克隆一个仓库然后找到密码。&lt;/p&gt;
+&lt;p&gt;仓库地址:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh://bandit28-git@localhost/home/bandit28-git/repo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;同样的在 /tmp 目录下创建一个名为 bandit29 的目录然后在该目录下克隆仓库&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mkdir /tmp/bandit29
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /tmp/bandit29
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git clone ssh://bandit28-git@localhost/home/bandit28-git/repo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img49.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;查看 README.md，发现密码项已经被隐藏了&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; repo
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat README.md
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img50.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;查看 git 日志&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img51.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;有一个最近一次提交的描述信息为解决信息泄露，应该就是这次修改将密码隐藏了，那么查看这个提交的内容即可找到密码连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;git show edd935d60906b33f0619605abd1689808ccdd5ee
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit29@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img52.png&#34;  alt=&#34;:(&#34; &gt;</description>
+    </item>
+    
+    <item>
+      <title>Wargame-Bandit Lv 17-24</title>
+      <link>https://1e0.top/post/bandit03/</link>
+      <pubDate>Sun, 16 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/bandit03/</guid>
+      <description>&lt;h2 id=&#34;level-17---18&#34;&gt;Level 17 - 18&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There are 2 files in the homedirectory: passwords.old and passwords.new. The password for the next level is in passwords.new and is the only line that has been changed between passwords.old and passwords.new&lt;/p&gt;
+&lt;p&gt;NOTE: if you have solved this level and see ‘Byebye!’ when trying to log into bandit18, this is related to the next level, bandit19&lt;/p&gt;
+&lt;p&gt;—Level 17 - 18&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示在当前目录下有两个文件，下一关卡密码在 passwords.new 文件中且与 passwords.old 文 件有一行存在差异,也就是说两个文件中有一行不同，那么使用 diff 命令比较两个文件即可找到存在差异的行获取密码&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href=&#34;https://linuxize.com/post/diff-command-in-linux/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Diff Command in Linux&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;diff passwords.new passwords.old
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit18@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img27.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;但是发现使用正确的密码任无法使用 SSH 连接到下一关卡(连接被关闭)，应该是下一关卡上作者修改了 .bashrc 文件将我们连接断开，所以使用-T选项禁用伪 TTY 分配&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh -T bandit18@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img28.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-18---19&#34;&gt;Level 18 - 19&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in a file readme in the homedirectory. Unfortunately, someone has modified .bashrc to log you out when you log in with SSH.&lt;/p&gt;
+&lt;p&gt;—Level 18 - 19&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;示密码在 readme 文件中和上面无法使用 SSH 连接到 bandit18 关卡的问题，不过我们已经成功登录了 bandit18 关卡，所以直接使用 cat 命令查看即可，我们无法在这个 shell 上建立会话，因此这里使用命令 exit 退出到 bandit17 关卡，再使用 SSH 连接到 bandit19 关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat readme
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit19@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img29.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-19---20&#34;&gt;Level 19 - 20&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (/etc/bandit_pass), after you have used the setuid binary.&lt;/p&gt;
+&lt;p&gt;—Level 19 - 20&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示说明当前目录下存在一个拥有 SUID 特殊权限的二进制文件，且告诉我们可以在 /etc/bandit_pass/ 目录中找到下一关卡的密码。查看这个文件发现文件权限的所属用户为 bandit20 且 x 权限变成了 s(Set UID)，而且所属组是 bandit19 拥有执行权限说明我们也可以执行这个二进制文件，也就是说我们可以利用这个文件拿到 bandit20 这一关卡的密码，因为当我们运行这个二进制文件是我们会暂时获得文件所有者 (bandit20) 的权限，然后我们以这个权限查看提示目录 /etc/bandit_pass/ 下 bandit20 这个文件获取下一个关卡密码&lt;/p&gt;
+&lt;p&gt;Linux 特殊权限：&lt;a href=&#34;https://www.cnblogs.com/sparkdev/p/9651622.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;https://www.cnblogs.com/sparkdev/p/9651622.html&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls -l
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./bandit20-do whoami
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./bandit20-do cat /etc/pass/bandit20
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit20@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img30.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-20---21&#34;&gt;Level 20 - 21&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21).&lt;/p&gt;
+&lt;p&gt;NOTE: Try connecting to your own network daemon to see if it works as you think&lt;/p&gt;
+&lt;p&gt;—Level 20 - 21&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这一关提示说当前目录下有一个二进制文件用于对指定端口上建立一个本地连接后读取一行文本(上一个关卡密码)进行比较，如果正确则提供下一关卡密码。那么就需要在两个终端下执行命令，我们再连接到 bandit20 后在终端上创建一个监听端口并把密码发送到该端口上，回到第一个终端运行脚本文件并指定连接到的端口号&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;bandit20 password&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; nc -lvp &lt;span class=&#34;m&#34;&gt;1234&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img31.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./suconnect &lt;span class=&#34;m&#34;&gt;1234&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img32.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;回到第二个终端查看，返回下一关卡密码使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit21@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img33.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-21---22&#34;&gt;Level 21 - 22&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.&lt;/p&gt;
+&lt;p&gt;—Level 21 - 22&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示得知系统中有一个自动运行程序，配置文件在 /etc/cron.d/ 中。因此我们使用 cd 命令到该目录下查看，发现存在六个文本文件由于我们下一关卡是 bandit22,所以我们查看 cronjob_bandit22 这个文件，显示有一个脚本文件。我们运行这个脚本，出现错误提示且显示一个奇怪文件路径，使用 cat 命令看看，最后用这个密码成功连接到下一关&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /etc/cron.d
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;file *
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat cronjob_bandit22
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/usr/bin/cronjob_bandit22.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit22@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img34.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-22---23&#34;&gt;Level 22 - 23&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.&lt;/p&gt;
+&lt;p&gt;NOTE: Looking at shell scripts written by other people is a very useful skill. The script for this level is intentionally made easy to read. If you are having problems understanding what it does, try executing it to see the debug information it prints.&lt;/p&gt;
+&lt;p&gt;—Level 22 - 23&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码还是在 /etc/cron.d 目录下的配置文件中。查看下一关卡(bandit23) 的配置文件，发现一个脚本文件尝试执行该脚本，显示将当前关卡的密码复制到 /tmp 目录的一个文件中，看看这个文件发现并不是我们想要的下一关卡密码。那么查看一下这个脚本文件代码吧，显然这个脚本定义了一个 myname 的变量接收 whoami 命令的输出然后传递到变量 mytarget 中 “I am user $myname” 进行 md5 加密再使用这个哈希命名密码文件到 /tmp 目录下，因此我们只需要修改 myname 的变量为 bandit23 并使用同样的方法加密即可获取到加密后的密码文件名了&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /etc/cron.d
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat cronjob_bandit23
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/usr/bin/cronjob_bandit23.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /tmp/8169b67bd894ddbb4412f91573b38db3
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /usr/bin/cronjob_bandit23.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; I am user bandit23 &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; md5sum &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; cut -d &lt;span class=&#34;s1&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt; -f &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit23@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img35.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-23---24&#34;&gt;Level 23 - 24&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.&lt;/p&gt;
+&lt;p&gt;NOTE: This level requires you to create your own first shell-script. This is a very big step and you should be proud of yourself when you beat this level!&lt;/p&gt;
+&lt;p&gt;NOTE 2: Keep in mind that your shell script is removed once executed, so you may want to keep a copy around…&lt;/p&gt;
+&lt;p&gt;—Level 23 - 24&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码在 /etc/cron.d 目录下，在此关卡需要创建一个 shell 脚本文件，来看看吧，查看下一关卡 (bandit24) 的配置文件，存在一个脚本文件路径，查看脚本文件。脚本功能貌似是在 /var/spool/bandit24 目录下执行所有脚本文件，若时间超过 60 秒则执行删除目录下所以文件。&lt;/p&gt;
+&lt;p&gt;思路一：&lt;/p&gt;
+&lt;p&gt;我们可以尝试创建一个 shell 脚本，将 /etc/bandit_pass/bandit24 的内容追加到我们指定我文件中，最后将脚本并复制到 /var/spool/bandit24 这个目录中让 bandit24 执行。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;需要注意脚本文件权限。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;思路二：&lt;/p&gt;
+&lt;p&gt;故技重施&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /etc/cron.d
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /cronjob_bandit24
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /usr/bin/cronjob_bandit24.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img36.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;当然是第一种方法比较简单 :D&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; I am user bandit24 &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; md5sum &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; cut -d &lt;span class=&#34;s1&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt; -f &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /tmp/ee4ee1703b083edac9f8183e4ae70293
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit24@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img37.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;hr&gt;</description>
+    </item>
+    
+    <item>
+      <title>Wargame-Bandit Lv 10-17</title>
+      <link>https://1e0.top/post/bandit02/</link>
+      <pubDate>Sat, 15 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/bandit02/</guid>
+      <description>&lt;h2 id=&#34;level-10---11&#34;&gt;Level 10 - 11&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in the file data.txt, which contains base64 encoded data&lt;/p&gt;
+&lt;p&gt;—Level 10 - 11&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码在当前目录下的 data.txt 文件中,且是经过 base64 编码加密的数据，使用 cat 命令查看文件内容并使用管道操作连接 base64 命令同时读取并解码文件内容，-d 选项为解码数据，获取密码后使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat data.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat data.txt &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; base64 -d 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit11@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img13.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-11---12&#34;&gt;Level 11 - 12&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in the file data.txt, where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions&lt;/p&gt;
+&lt;p&gt;—Level 11 - 12&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示在密码在 data.txt 文件中，其中小写字母 (a-z) 和大写字母 (A-Z) 都偏移了 13 个位置，关键词 “rotated”、“13”，依此可知该文本内容应该为凯撒密码的加密后的结果（&lt;a href=&#34;https://zh.wikipedia.org/wiki/ROT13&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;strong&gt;ROT13&lt;/strong&gt;&lt;/a&gt;），使用 cat 命令查看文件并使用管道符将 cat 命令输出作为 tr 命令的输入对文本内容进行字符替换，其中 a-zA-Z 表示匹配所有小写和大写字母，n-za-mN-ZA-M 表示替换为字母表中的对应字母，如：a 替换为 n，b 替换为 o，c 替换为 p，以此类推，直到 m 替换为 z，然后字母从 n 到 z 依次替换为 a 到 m。最终获取正确密码并使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat data.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat data.txt &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; tr a-zA-Z n-za-mN-ZA-M
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit12@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img14.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-12---13&#34;&gt;Level 12 - 13&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in the file data.txt, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work using mkdir. For example: mkdir /tmp/myname123. Then copy the datafile using cp, and rename it using mv (read the manpages!)&lt;/p&gt;
+&lt;p&gt;—Level 12 - 13&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码在 data.txt 文件中，该文件是一个已经被重复压缩过的十六进制转储文件&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img15.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;需要先将十六进制转储的文件还原(xxd命令)，但查看当前目录权限发现没有写入权限，所以在 /tmp 目录下创建一个名为 pp 的目录并将 data.txt 文件复制过去后再进行文件还原，使用 file 命令查看还原文件的文件类型对相应的类型进行反复的解压缩操作&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img16.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img17.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;最后获取到密码并使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img18.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-13---14&#34;&gt;Level 13 - 14&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in /etc/bandit_pass/bandit14 and can only be read by user bandit14. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. Note: localhost is a hostname that refers to the machine you are working on&lt;/p&gt;
+&lt;p&gt;—Level 13 - 14&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示不会有下一关卡的密码，但是获得了一个 SSH 私钥，使用这个私钥登录到下一个关卡&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href=&#34;https://www.ssh.com/academy/ssh/command#ssh-command-line-options&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;SSH Command - Usage, Options, Configuration&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit14@localhost -i sshkey.private
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img19.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-14---15&#34;&gt;Level 14 - 15&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level can be retrieved by submitting the password of the current level to port 30000 on localhost.&lt;/p&gt;
+&lt;p&gt;Level 14 - 15&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示通过在向本机的 30000 端口上提供当前关卡的密码进入到下一关卡，首先查看当前关卡的密码再使用 telnet 命令(或 nc 命令)连接本地的 30000 端口，输入当前密码后屏幕显示通往下一关卡密码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /etc/bandit_pass/bandit14
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;telnet loaclhost &lt;span class=&#34;m&#34;&gt;30000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit15@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img20.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-15---16&#34;&gt;Level 15 - 16&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL encryption.&lt;/p&gt;
+&lt;p&gt;Helpful note: Getting “HEARTBEATING” and “Read R BLOCK”? Use -ign_eof and read the “CONNECTED COMMANDS” section in the manpage. Next to ‘R’ and ‘Q’, the ‘B’ command also works in this version of that command…&lt;/p&gt;
+&lt;p&gt;—Level 15 - 16&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示需要将当前关卡的密码通过 SSL 加密提交到本地的 30001 端口上来获取下一关卡密码，使用 openssl 命令的 s_client 模块可以帮助我们于 SSL 服务器进行交互，-ign_eof 保证当输入完成后不会立即中断连接&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href=&#34;https://www.openssl.org/docs/man1.0.2/man1/s_client.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;OpenSSL Docs&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;openssl s_client -connect localhost:30001 -ign_eof
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit16@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img21.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;在建立连接后我们提供当前关卡的密码，获取到通往到下一个卡密码&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img22.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-16---17&#34;&gt;Level 16 - 17&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The credentials for the next level can be retrieved by submitting the password of the current level to a port on localhost in the range 31000 to 32000. First find out which of these ports have a server listening on them. Then find out which of those speak SSL and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it.&lt;/p&gt;
+&lt;p&gt;—Level 16 - 17&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示说明如上一关卡方式将当前关卡的密码提交到本机上 31000 到 32000 端口范围内的一个端口上来获取下一关卡的密码，首先使用 nmap 扫描 3100-3200 这个范围的端口，扫描结果可以看到 31790 端口提示我们需要在该端口上输入密码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nmap -A -p 31000-32000 localhost
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;openssl s_client -connect localhost:31790 -ign_eof
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img23.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img24.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;输入当前关卡的密码后获取到一段 RSA 密钥，我们需要创建一个私钥，但在当前目录下我们无法执行写入操作，因此我仍在 /tmp 目录下创建一个目录并创建一个文件将 RSA 密钥粘贴到文件中保存、修改权限仅为所有者可读写，再使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img25.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mkdir -p /tmp/p
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /tmp/p
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;vi p.private
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;chmod &lt;span class=&#34;m&#34;&gt;600&lt;/span&gt; p.private
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit17@localhost -i p.private
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img26.png&#34;  alt=&#34;:(&#34; &gt;</description>
+    </item>
+    
+    <item>
+      <title>Wargame-Bandit Lv 01-10</title>
+      <link>https://1e0.top/post/bandit01/</link>
+      <pubDate>Fri, 14 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/bandit01/</guid>
+      <description>&lt;p&gt;Wargame 以一种充满乐趣的游戏形式帮助用户通过实践学习安全知识，其中 Bandit 是一个适合初学者练习的 Linux 基础知识的游戏(目前设有 34 个关卡)，游戏的每一个关卡有相应的游戏提示。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;游戏地址&lt;/strong&gt;：&lt;a href=&#34;https://overthewire.org/wargames/bandit/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;https://overthewire.org/wargames/bandit/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;任务&lt;/strong&gt;：&lt;u&gt;找到通往下一关卡的密码&lt;/u&gt;&lt;/p&gt;
+&lt;h2 id=&#34;level-0&#34;&gt;Level 0&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The goal of this level is for you to log into the game using SSH. The host to which you need to connect is bandit.labs.overthewire.org, on port 2220. The username is bandit0 and the password is bandit0. Once logged in, go to the Level 1 page to find out how to beat Level 1.&lt;/p&gt;
+&lt;p&gt;—Level 0&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;第一关，要求使用 SSH 连接到靶机并给出如下信息：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-TEXT&#34; data-lang=&#34;TEXT&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Host：bandit.labs.overthewire.org
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Port: 2220
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Username: bandit0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Password: bandit0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;SSH 相关内容：&lt;a href=&#34;https://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;《SSH 入门教程》发布了&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用终端登录：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit0@landit.labs.overthewire.org
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img01.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-0---1&#34;&gt;Level 0 - 1&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in a file called readme located in the home directory. Use this password to log into bandit1 using SSH. Whenever you find a password for a level, use SSH (on port 2220) to log into that level and continue the game.&lt;/p&gt;
+&lt;p&gt;—Level 0 - 1&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示下一关密码在 readme 文件中，使用 ls 命令列出当前目录下的文件，使用 cat 命令查看文件内容获取下一关密码并使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat readme
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit1@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img02.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-1---2&#34;&gt;Level 1 - 2&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in a file called - located in the home directory&lt;/p&gt;
+&lt;p&gt;—Level 1 - 2&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码在一个名为 &amp;ldquo;-&amp;rdquo; 的文件中，发现这是一个连字符当输入 cat - 运行系统将无法理解这个文件名，为此在命令中添加文件路径使用命令 cat ./- 表示查看当前目录下的 - 文件，获取到下一关的密码并使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat ./-
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit2@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img03.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-2---3&#34;&gt;Level 2 - 3&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in a file called spaces in this filename located in the home directory&lt;/p&gt;
+&lt;p&gt;—Level 2 - 3&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码在一个名为 “spaces” 的文件中，ls 查看发现文件名含有空格字符，可使用 &amp;ldquo;\&amp;rdquo; 将文件名中的空格字符进行转义或者输入文件名前面字段后使用 TAB 键补全文件名，另外也可以将文件名使用引号引起来，获取到下一关密码并使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat spaces&lt;span class=&#34;se&#34;&gt;\ &lt;/span&gt;in&lt;span class=&#34;se&#34;&gt;\ &lt;/span&gt;this&lt;span class=&#34;se&#34;&gt;\ &lt;/span&gt;filename
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat &lt;span class=&#34;s2&#34;&gt;&amp;#34;spaces in this filename&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit3@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img04.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-3---4&#34;&gt;Level 3 - 4&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in a hidden file in the inhere directory.&lt;/p&gt;
+&lt;p&gt;—Level 3 - 4&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码在 inhere 目录下一个隐藏文件，使用 ls 命令 -a 选项显示 inhere 目录下的隐藏文件并使用 cat 命令查看隐藏文件内容获取下一关密码使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls -a inhere
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat inhere/.hidden
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit4@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img05.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-4---5&#34;&gt;Level 4 - 5&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in the only human-readable file in the inhere directory. Tip: if your terminal is messed up, try the “reset” command.&lt;/p&gt;
+&lt;p&gt;—Level 4 - 5&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码在 inhere 目录下的一个人类可读的文件，ls 查看一下 inhere 目录发现很多文件，使用 file 命令查看这些文件的文件类型 find inhere/* 发现仅有一个文件是 ASCII 文本文件查看该文件获取密码&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href=&#34;https://phoenixnap.com/kb/linux-file-command&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;https://phoenixnap.com/kb/linux-file-command&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls inhere/
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;file inhere/*
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat inhere/-file07
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit5@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img06.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-5---6&#34;&gt;Level 5 - 6&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in a file somewhere under the inhere directory and has all of the following properties:&lt;/p&gt;
+&lt;p&gt;human-readable&lt;/p&gt;
+&lt;p&gt;1033 bytes in size&lt;/p&gt;
+&lt;p&gt;not executable&lt;/p&gt;
+&lt;p&gt;—Level 5 - 6&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;根据提示密码在 inhere 目录下的某个文件中，且具有以下属性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;人类可读&lt;/li&gt;
+&lt;li&gt;文件字节大小为 1033 字节&lt;/li&gt;
+&lt;li&gt;不可执行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;根据文本文件大小使用 find 命令查询使用 -size 选项 c 表示匹配文件大小单元为字节,找到下一关密码使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href=&#34;https://man7.org/linux/man-pages/man1/find.1.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;find(1) — Linux manual page&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls inhere
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;file inhere/*
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat inhere/maybehere07/.file2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit6@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img07.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-6---7&#34;&gt;Level 6 - 7&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored somewhere on the server and has all of the following properties:&lt;/p&gt;
+&lt;p&gt;owned by user bandit7&lt;/p&gt;
+&lt;p&gt;owned by group bandit6&lt;/p&gt;
+&lt;p&gt;33 bytes in size&lt;/p&gt;
+&lt;p&gt;—Level 6 - 7&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码在服务器的某个位置，且具有以下属性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;所属用户为 bandit7&lt;/li&gt;
+&lt;li&gt;所属组为 bandit6&lt;/li&gt;
+&lt;li&gt;文件字节大小为 33 个字节&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;同样使用 find 命令查询整个系统，-user 表示匹配所属用户、-group 表示匹配所属组，获取密码后使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;find / -user bandit7 -group bandit6 -size 33c
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit7@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img08.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;img src=&#34;https://1e0.top/img/bandit/img09.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-7---8&#34;&gt;Level 7 - 8&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in the file data.txt next to the word millionth&lt;/p&gt;
+&lt;p&gt;—Level 7 - 8&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;根据提示密码在当前目录下的 data.txt 文件中单词 “millionth” 的旁边，使用管道符连接命令将 cat 的输出通过 grep 执行关键词搜索过滤掉多余内容，获取密码后使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat data.txt &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep millionth
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit8@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img10.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-8---9&#34;&gt;Level 8 - 9&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in the file data.txt and is the only line of text that occurs only once&lt;/p&gt;
+&lt;p&gt;—Level 8 - 9&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;密码在 data.txt 文件中且仅出现一次，先使用 sort 命令对文本内容进行排序再使用 uniq 过滤不重复的语句 -u 选项表示仅显示出现一次的行列，获取密码后使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat data.txt &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; sort &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; uniq -u
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit9@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img11.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;level-9---10&#34;&gt;Level 9 - 10&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The password for the next level is stored in the file data.txt in one of the few human-readable strings, preceded by several ‘=’ characters.&lt;/p&gt;
+&lt;p&gt;—Level 9 - 10&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;提示密码在 data.txt 文件中，但少数几人能读懂(非文本文件)密码前面有 “=” 字符，关键词 &lt;strong&gt;strings&lt;/strong&gt;，使用 strings 命令打印文件中可打印的字符串,获取密码后使用 SSH 连接到下一关卡&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href=&#34;https://www.javatpoint.com/linux-strings-command&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;https://www.javatpoint.com/linux-strings-command&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;strings data.txt &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;grep&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh bandit10@localhost
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;img src=&#34;https://1e0.top/img/bandit/img12.png&#34;  alt=&#34;:(&#34; &gt;</description>
+    </item>
+    
+    <item>
+      <title>为树莓派配置 VNC 服务</title>
+      <link>https://1e0.top/post/respberrypi/</link>
+      <pubDate>Thu, 04 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/respberrypi/</guid>
+      <description>&lt;h2 id=&#34;前期准备&#34;&gt;前期准备&lt;/h2&gt;
+&lt;h3 id=&#34;硬件材料&#34;&gt;硬件材料&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;树莓派开发板&lt;/li&gt;
+&lt;li&gt;Micro SD 卡(建议不小于 8G 容量)&lt;/li&gt;
+&lt;li&gt;USB 读卡器&lt;/li&gt;
+&lt;li&gt;树莓派电源适配器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;下载系统镜像及工具&#34;&gt;下载系统镜像及工具&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.raspberrypi.org/downloads/raspberry-pi-os/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;下载官方镜像 &lt;strong&gt;Raspberry Pi Desktop&lt;/strong&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.balena.io/etcher/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;下载镜像烧录工具 &lt;strong&gt;balenaEtcher&lt;/strong&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.sdcard.org/downloads/formatter/index.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;下载 SD 卡格式化工具 &lt;strong&gt;SD Memory Card Formatter&lt;/strong&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;实现步骤&#34;&gt;实现步骤&lt;/h2&gt;
+&lt;h3 id=&#34;烧录系统镜像&#34;&gt;烧录系统镜像&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1.安装并使用 SD Memory Card Formatter 工具格式化 SD 卡。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;将 SD 卡插入读卡器并连接电脑，打开 &lt;code&gt;SD Memory Card Formatter&lt;/code&gt; 。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/pi/img01.png&#34;  alt=&#34;:(&#34;  title=&#34;raspberry&#34; /&gt;
+&lt;blockquote&gt;
+&lt;p&gt;程序会自动选择到该盘符，点击 &lt;code&gt;Format&lt;/code&gt; 按钮开始格式化 SD 卡。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;2.使用 balenaEtcher-portable 烧录树莓派镜像。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;打开 &lt;code&gt;balenaEtcher&lt;/code&gt;，点击 &lt;code&gt;Select image&lt;/code&gt; 按钮找到树莓派镜像文件。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/pi/img02.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;选择要写入到哪个设备（程序会自动选择到我们的 SD 卡或点击 &lt;code&gt;Change&lt;/code&gt; 按钮选择）。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/pi/img03.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;最后点击 &lt;code&gt;Flash!&lt;/code&gt; 即开始刷写镜像到 SD 卡中，等待刷写完毕即可关闭程序。&lt;/p&gt;
+&lt;h3 id=&#34;新建配置文件&#34;&gt;新建配置文件&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1.在树莓派的 /boot 目录下新建一个名为 wpa_supplicant.conf 配置文件，按如下格式编辑文件内容:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;highlight&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;countr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cn
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;ctrl_interface&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dir&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/var/run/wpa_supplicant &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;netdev
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;update_config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;network&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;={&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;nv&#34;&gt;ssid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;# WiFi 名称&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;nv&#34;&gt;psk&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;	&lt;span class=&#34;c1&#34;&gt;# WiFi 密码&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;nv&#34;&gt;key_mgmt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;wpa-psk	&lt;span class=&#34;c1&#34;&gt;# 无线网络认证加密方式&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;nv&#34;&gt;priority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;此步骤以确保树莓派第一次启动时自动连接到设置的无线网络，与电脑主机在同一网段下。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在引号中填入 WiFi 名及 WiFi 密码并保存。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;2.在树莓派的 /boot 目录下新建 shh 文件；此步骤设置开启树莓派 ssh 服务。&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ssh 文件内容为空且无后缀名。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;远程连接树莓派并配置&#34;&gt;远程连接树莓派并配置&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1.插电开机。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2.登录路由器管理后台，查看树莓派获取的 IP 地址使用远程连接工具连接树莓派。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;树莓派获取到 IP 地址为：&lt;strong&gt;192.168.123.202 。&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;可登陆无线路由器管理后台查看分配给树莓派的 IP，或使树莓派与 PC 通过网线互连后打开 Wireshark 工具筛选 arp 包获取。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;使用 &lt;a href=&#34;https://www.putty.org/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;putty&lt;/a&gt; 或使用其它远程登录工具远程连接树莓派。&lt;/p&gt;
+&lt;!-- &lt; img src=&#34;https://1e0.top/img/pi/img07.png&#34;  alt=&#34;:(&#34;  abs=&#34;y&#34; &gt; --&gt;
+&lt;p&gt;输入树莓派 IP 地址及端口号 22 远程连接树莓派，默认用户为 &lt;code&gt;pi&lt;/code&gt; 密码为 &lt;code&gt;raspberry&lt;/code&gt;。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/pi/img08.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;&lt;strong&gt;3.修改用户密码&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在终端输入 &lt;code&gt;sudo raspi-config&lt;/code&gt; 进入树莓派配置界面。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/pi/img09.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;选中第一项 &lt;code&gt;change user password&lt;/code&gt; 后按回车键修改用户密码，按提示将要修改用户 &lt;code&gt;pi&lt;/code&gt; 的密码，按回车键确定后在键盘上输入新密码即可。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4.设置屏幕分辨率&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;选中第七项 &lt;code&gt;advanced options &lt;/code&gt; 按回车键再选择 &lt;code&gt;resolution&lt;/code&gt; 选择一个合适的分辨率即可。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/pi/img12.2.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;&lt;strong&gt;5.开启 VNC 服务&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;选中第五项 &lt;code&gt;interfacing options&lt;/code&gt; 后按回车键进入接口配置。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/pi/img11.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;选中第三项开启 VNC 服务&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/pi/img12.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;提示是否开启 VNC 服务，按键盘方向键选中 &lt;code&gt;yes&lt;/code&gt; 回车后提示服务已打开按回车确认。&lt;/p&gt;
+&lt;p&gt;最后选择 &lt;code&gt;finish&lt;/code&gt; 会提示重启树莓派确认即可。&lt;/p&gt;
+&lt;h2 id=&#34;连接到树莓派&#34;&gt;连接到树莓派&lt;/h2&gt;
+&lt;p&gt;下载 &lt;a href=&#34;https://www.realvnc.com/en/connect/download/viewer/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt; &lt;strong&gt;RealVNC® Connect&lt;/strong&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;RealVNC® Connect 支持使用多种方式进行 VNC 连接，这里选择在 Chrome 浏览器中安装作为扩展程序。&lt;/p&gt;
+&lt;p&gt;安装完成自动跳转到&lt;code&gt;chrome://apps/&lt;/code&gt;浏览器应用界面点击 &lt;code&gt;vnc® viewer for google chrome™&lt;/code&gt; 弹出窗口输入树莓派 IP 地址及选择画质点击 &lt;code&gt;Connect&lt;/code&gt;。&lt;/p&gt;
+&lt;!-- &lt; img src=&#34;https://1e0.top/img/pi/img15.png&#34;  alt=&#34;:(&#34;  abs=&#34;y&#34; &gt; --&gt;
+&lt;p&gt;输入用户名及密码点击 &lt;code&gt;ok&lt;/code&gt; 即可连接到树莓派桌面。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/pi/img16.png&#34;  alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;参考项目&#34;&gt;参考项目&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://retropie.org.uk/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;复古游戏&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/wwj718/awesome-raspberry-pi-zh&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;树莓派(raspberry pi)资源大全中文版&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://magicmirror.builders/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;魔镜&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Web 安全学习笔记</title>
+      <link>https://1e0.top/post/web-note/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/web-note/</guid>
+      <description>&lt;h1 id=&#34;http协议&#34;&gt;HTTP协议&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;HTTP&lt;/strong&gt; ( HyperText Transfer Protocol )协议即 &lt;strong&gt;超文本传输协议&lt;/strong&gt;，详细规定了浏览器和服务器之间相互通信的规则。HTTP 是一种无状态的协议，无状态指的是 Web 浏览器与 Web 服务器之间不需要建立持久的连接 HTTP 协议规定只能由客户端主动发送请求，服务器不能主动向客户端发送数据即遵循 &lt;strong&gt;请求(Response) / 响应&lt;/strong&gt; 流程。&lt;/p&gt;
+&lt;h2 id=&#34;发起一个-http-请求&#34;&gt;发起一个 HTTP 请求&lt;/h2&gt;
+&lt;p&gt;在浏览器地址栏输入一个有效 &lt;strong&gt;URL&lt;/strong&gt; 后按回车键，即可发起一个 HTTP 请求并会看到请求返回的结果 — HTTP 响应。&lt;/p&gt;
+&lt;p&gt;URL：统一资源定位符或网页地址&lt;/p&gt;
+&lt;p&gt;URL 标准格式：&lt;/p&gt;
+&lt;p&gt;协议：//服务器IP [：端口号] /路径 /[查询]&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例如：http://www.example.com:8080/index.html&amp;hellip;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;http-请求&#34;&gt;HTTP 请求&lt;/h2&gt;
+&lt;p&gt;HTTP 请求内分为三部分内容组成，分别是&lt;strong&gt;请求行&lt;/strong&gt;(请求方法)、&lt;strong&gt;请求头&lt;/strong&gt;(消息报头)、&lt;strong&gt;请求正文&lt;/strong&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;POST /login.php HTTP/1.1	#请求行
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;HOST: www.example.com		#请求头
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;User-Agent: User-Agent: Mozilla/5.0 (windows NT 10.0; Win64; x64) AppleWebKit/537.36...
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#空白行，表示请求头结束
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Username-admin&amp;amp;password=123456	#请求正文
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;其中请求行分为三段第一段 &lt;strong&gt;POST&lt;/strong&gt; 表示请求方法用 &lt;strong&gt;/&lt;/strong&gt; 分隔， &lt;strong&gt;login.php&lt;/strong&gt; 表示请求的文件资源，最后一段标记的是 HTTP 协议的 &lt;strong&gt;版本消息&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;请求头部分 &lt;strong&gt;HOST&lt;/strong&gt; 标记请求的主机地址、&lt;strong&gt;User-Agent&lt;/strong&gt; 标记浏览器消息等，请求头信息可修改。&lt;/p&gt;
+&lt;p&gt;HTTP 请求数据包中的最后一段为请求的 &lt;strong&gt;正文&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;http-响应&#34;&gt;HTTP 响应&lt;/h2&gt;
+&lt;p&gt;HTTP 响应也分为三部分内容组成，分别为 &lt;strong&gt;响应行&lt;/strong&gt;、&lt;strong&gt;响应头&lt;/strong&gt;、&lt;strong&gt;响应正文&lt;/strong&gt; 即与 HTTP 请求对应。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;HTTP/1.1 200 OK     #响应行
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Date: Fri, 08 May 2020 03:37:11 GMT     #响应头
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Content-Type: application/x-javascript;charset=utf-8
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Connection: close
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;P3P: CP=CAO password OUR
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Set-cookie: fanyamoocs=11401F839C536D9E; Domain=example.com; Path=/; HttpOnly
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#空白行，表示响应头结束
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&amp;lt;html&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&amp;lt;head&amp;gt;&amp;lt;title&amp;gt; Index.html &amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;    #响应正文
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&amp;lt;/html&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;其中响应行带有 &lt;strong&gt;HTTP 的版本信息&lt;/strong&gt;、状态码及消息如 “OK”。&lt;/p&gt;
+&lt;p&gt;响应头标记数据类型时间等信息。&lt;/p&gt;
+&lt;p&gt;响应正文即客户端请求的 &lt;strong&gt;HTML 数据&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;http-请求方法&#34;&gt;HTTP 请求方法&lt;/h2&gt;
+&lt;p&gt;常用 &lt;strong&gt;GET&lt;/strong&gt;、&lt;strong&gt;POST&lt;/strong&gt;。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;请求方法&lt;/th&gt;
+&lt;th&gt;备注&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;GET&lt;/td&gt;
+&lt;td&gt;用于获取请求页面的指定信息(以实体的格式)，请求非 HTML 资源返回 Web 容器解析后的 HTML 源代码；GET 方法请求可以带参数，参数项以“&amp;amp;”分隔&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;HEAD&lt;/td&gt;
+&lt;td&gt;是除了服务器不能再响应内容中返回的内容其余与 GET 方法相同，此方法多用于测试超文本链接的有效性、可访问性和最近的改变&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;POST&lt;/td&gt;
+&lt;td&gt;与 GET 方法类似，区别于 GET 方法无请求内容而 POST 方法中带有请求内容，POST 请求方法主要用于向服务器传输数据，相对于 POST 方法 GET 方法安全性较低&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;PUT&lt;/td&gt;
+&lt;td&gt;用于请求服务器把请求的实体存储在请求资源下，如请求资源在服务器存在则将在把原有的数据替换为请求中数据，如不存在则将在服务器中创建这个资源将数据存入&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MOVE&lt;/td&gt;
+&lt;td&gt;此方法向服务器请求移动某个资源&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;COPY&lt;/td&gt;
+&lt;td&gt;此方法向服务器请求拷贝那个资源&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;DELETE&lt;/td&gt;
+&lt;td&gt;用于请求服务器删除请求中指定的资源&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;TRACE&lt;/td&gt;
+&lt;td&gt;用于激发一个远程的应用层的请求消息回路，相当于返回显示服务器收到的请求&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;CONNECT&lt;/td&gt;
+&lt;td&gt;为看用于能动态的切换到隧道的代理( HTTP.1 协议规范中保留了此方法)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;OPTIONS&lt;/td&gt;
+&lt;td&gt;是用于请求获得由 URL 标识的资源在请求/响应过程中可以使用的功能选项，通过此方法可以获取到请求时可以使用的请求方法选项&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;http-响应状态码&#34;&gt;HTTP 响应状态码&lt;/h2&gt;
+&lt;p&gt;使用浏览器向服务器发送一个 HTTP 请求，服务器接收到我们发送的请求后会向我们客户端返回响应消息，其中 HTTP &lt;strong&gt;响应报文&lt;/strong&gt; 中的第一行（响应行）中可见到服务器返回的 &lt;strong&gt;HTTP 状态码&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;HTTP 协议中的状态码由三位数字组成，第一位数字定义响应的类别，有以下 &lt;strong&gt;5 种&lt;/strong&gt;：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;状态码&lt;/th&gt;
+&lt;th&gt;备注&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1xx&lt;/td&gt;
+&lt;td&gt;信息提示，表示请求已被成功接收，继续处理。其范围位 100~101&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2xx&lt;/td&gt;
+&lt;td&gt;成功，服务器成功处理请求。范围为 200~206&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3xx&lt;/td&gt;
+&lt;td&gt;重定向，重定向状态码用于告诉浏览器浏览器客户端，访问的资源已经被移动，并告诉客户端新的资源地址位置，此时浏览器将重新对新资源发起请求。其范围为：300~305&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4xx&lt;/td&gt;
+&lt;td&gt;客户端错误状态码，当客户端发送一些无法处理的请求，例如格式错误的请求或者不存在的URL服务器所返回的状态码。其范围为：400~415&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5xx&lt;/td&gt;
+&lt;td&gt;当客户端发送了一条有效的请求，但 Web 服务器无法正常处理或服务器内部错误等服务器所返回的状态码。其范围为：500~505&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;常见的状态码&#34;&gt;常见的状态码&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;状态码&lt;/th&gt;
+&lt;th&gt;备注&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;200&lt;/td&gt;
+&lt;td&gt;客户端请求成功&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;201&lt;/td&gt;
+&lt;td&gt;一般用 put 方法，成功在服务器端成功创建文件后返回的状态码&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;301&lt;/td&gt;
+&lt;td&gt;请求资源被找到，永久性的将请求重定向到 location 所指定的 url 上，后所有的请求都将被重定向&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;302&lt;/td&gt;
+&lt;td&gt;请求资源被找到，只是临时重定向到 localtion 所指定的 url 上随后的请求将不在重定向重定向&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;400&lt;/td&gt;
+&lt;td&gt;客户端有语法错误，不能被服务器所理解&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;401&lt;/td&gt;
+&lt;td&gt;请求未经授权&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;403&lt;/td&gt;
+&lt;td&gt;服务器收到请求，但拒绝提供服务&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;404&lt;/td&gt;
+&lt;td&gt;请求资源不存在&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;500&lt;/td&gt;
+&lt;td&gt;服务器内部错误&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;502&lt;/td&gt;
+&lt;td&gt;一般是由于网站连接过多，服务器暂时无法做出正常响应&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;503&lt;/td&gt;
+&lt;td&gt;服务器当前不能处理客户端请求&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;http-消息&#34;&gt;HTTP 消息&lt;/h2&gt;
+&lt;p&gt;HTTP 消息又称为 HTTP 头(HTTP header)由四部分组成。&lt;/p&gt;
+&lt;p&gt;分别是&lt;strong&gt;请求头&lt;/strong&gt;、&lt;strong&gt;响应头&lt;/strong&gt;、&lt;strong&gt;普通头&lt;/strong&gt;、&lt;strong&gt;实体头&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;1请求头&#34;&gt;1.请求头&lt;/h3&gt;
+&lt;p&gt;请求头在 HTTP 请求报文中允许客户端向服务端传递请求的附加消息和客户端自身学习，常见 HTTP 请求头如下：&lt;/p&gt;
+&lt;!--
+```XML
+HOST 		#HOST 请求报文域主要用于指定被请求资源的 Internet 主 机和端口号，例如：HOST:www.explem.com:80
+
+Referer  	#Referer 包含一个 URL ，表示当前访问的URL的上一个 URL，即用户是从哪里跳转来到此页面
+
+Cookie 		#Cookie 是非常重要的请求头，它是一段文本，常用来表示请求者身份等
+
+Range		#Range 可以请求实体的部分内容，多线程下载一定会用到此请求头
+
+Accept 		#Accept 请求报头域用于接收那些 MIME 类型的消息，如 Accept：text
+
+User-Agent 	#User-Agent请求报头域允许客户端将它的操作系统、浏览器个其它属性告诉服务器
+
+X-forward-for 	#X-forward-for 即 XFF 头用来标记请求端的 IP 地址，可以由多个，中间以逗号隔开
+
+AcceptCharset 	#Accept-Charset 请求报头域用于指定客户端接收的字符集，如请求消息中没有定义这个域则默认可接收任何字符集
+```		
+--&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;请求头&lt;/th&gt;
+&lt;th&gt;备注&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;HOST&lt;/td&gt;
+&lt;td&gt;HOST 请求报文域主要用于指定被请求资源的 Internet 主 机和端口号，例如：HOST:www.explem.com:80&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Referer&lt;/td&gt;
+&lt;td&gt;Referer 包含一个 URL ，表示当前访问的URL的上一个 URL，即用户是从哪里跳转来到此页面&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Cookie&lt;/td&gt;
+&lt;td&gt;Cookie 是非常重要的请求头，它是一段文本，常用来表示请求者身份等&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Range&lt;/td&gt;
+&lt;td&gt;Range 可以请求实体的部分内容，多线程下载一定会用到此请求头&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Accept               &lt;/td&gt;
+&lt;td&gt;Accept 请求报头域用于接收那些 MIME 类型的消息，如 Accept：text&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;User-Agent&lt;/td&gt;
+&lt;td&gt;User-Agent请求报头域允许客户端将它的操作系统、浏览器个其它属性告诉服务器&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;X-Forward-For&lt;/td&gt;
+&lt;td&gt;X-forward-for 即 XFF 头用来标记请求端的 IP 地址，可以由多个，中间以逗号隔开&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Accept-Charset&lt;/td&gt;
+&lt;td&gt;Accept-Charset 请求报头域用于指定客户端接收的字符集，如请求消息中没有定义这个域则默认可接收任何字符集&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;2响应头&#34;&gt;2.响应头&lt;/h3&gt;
+&lt;p&gt;响应头是服务器根据请求向客户端发送的 HTTP 头，常见 HTTP 响应头如下：&lt;/p&gt;
+&lt;!--
+
+```text
+Server 		#Server 表示服务器所使用的 Web 
+
+Location	#服务器通过该响应报头域告诉浏览器去访问哪一个页面，浏览器接收到后通常会立即访问 Location 头所指向的页面，通常配合 302 状态码使用
+
+Refresh		#服务器通过此响应报头域告诉浏览器定时刷新浏览器
+
+Set-cookie 	#向客户端设置 Cookie，即服务器向客户端发送的 Cookie 信息
+
+Last-Modified 	#服务器通过该响应报头域告诉浏览器资源的最后修改时间
+```
+--&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;响应头&lt;/th&gt;
+&lt;th&gt;备注&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Server&lt;/td&gt;
+&lt;td&gt;Server 表示服务器所使用的 Web&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Location&lt;/td&gt;
+&lt;td&gt;服务器通过该响应报头域告诉浏览器去访问哪一个页面，浏览器接收到后通常会立即访问 Location 头所指向的页面，通常配合 302 状态码使用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Refresh            &lt;/td&gt;
+&lt;td&gt;服务器通过此响应报头域告诉浏览器定时刷新浏览器&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Set-cookie&lt;/td&gt;
+&lt;td&gt;向客户端设置 Cookie，即服务器向客户端发送的 Cookie 信息&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Last-Modified&lt;/td&gt;
+&lt;td&gt;服务器通过该响应报头域告诉浏览器资源的最后修改时间&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;3普通头&#34;&gt;3.普通头&lt;/h3&gt;
+&lt;p&gt;在普通报头中，有少数报头域用于所有的请求和响应消息，但并不用于被传输的实体，只用于传输的消息。&lt;/p&gt;
+&lt;h3 id=&#34;4实体头&#34;&gt;4.实体头&lt;/h3&gt;
+&lt;p&gt;请求和响应都可以传递以一个实体头。实体头定义了关于实体正文和请求所标识的资源的元消息。元消息是实体内容的属性，包括实体消息类型、长度、压缩方法、最后一次修改时间等。&lt;/p&gt;
+&lt;h2 id=&#34;参考文献&#34;&gt;参考文献&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://book.douban.com/subject/26348894/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;《Web安全深度剖析》&lt;/a&gt; 、 &lt;del&gt;&lt;a href=&#34;https://klionsec.github.io/2017/06/18/http-basic/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;《从入侵者的眼中去理解 http 协议》&lt;/a&gt;&lt;/del&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>PotPlayer 简单配置</title>
+      <link>https://1e0.top/post/potplayer/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://1e0.top/post/potplayer/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;PotPlayer&lt;/strong&gt; 是一款免费的本地视频播放器，其内置了许多强大的解码器及支持网络流媒体播放。相较于其它视频播放器，PotPlayer 界面更干净清爽、功能更强大且应用无广告推送、捆绑插件等问题。&lt;/p&gt;
+&lt;h2 id=&#34;特点&#34;&gt;特点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;提供更多的字幕输出选项&lt;/li&gt;
+&lt;li&gt;内置了多媒体文件的解码器，不需要另外安装解码器&lt;/li&gt;
+&lt;li&gt;支持播放 50MB 以下的 ZIP/RAR 压缩包内的多媒体内容&lt;/li&gt;
+&lt;li&gt;硬件加速，支持 DxVA（DirectX Video Acceleration）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;下载安装&#34;&gt;下载安装&lt;/h2&gt;
+&lt;p&gt;访问 &lt;strong&gt;PotPlayer&lt;/strong&gt; 官网根据操作系统版本进行下载、安装。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;官网地址：&lt;a href=&#34;http://potplayer.daum.net&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;http://potplayer.daum.net&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;PotPlayer 目前仅支持 Windows 操作系统。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;简单使用&#34;&gt;简单使用&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;可以通过三种方式播放媒体文件&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;右击媒体文件使用 PotPlayer 打开&lt;/li&gt;
+&lt;li&gt;使用鼠标将媒体文件&lt;code&gt;拖放&lt;/code&gt;到 PotPlayer 中播放&lt;/li&gt;
+&lt;li&gt;在 PotPlayer 中&lt;code&gt;右击鼠标&lt;/code&gt;选择&lt;code&gt;打开文件&lt;/code&gt;或按键盘 &lt;code&gt;F3&lt;/code&gt; 键弹出资源管理器找到需要打开的媒体资源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;img src=&#34;https://1e0.top/img/potplayer/img03.jpg&#34; alt=&#34;:(&#34; &gt;
+&lt;h3 id=&#34;常用快捷键&#34;&gt;常用快捷键&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;快捷键&lt;/th&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;功能&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;F3&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;打开文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;空格键/Space&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;暂停和播放&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;回车键 /Enter&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;全屏播放\退出全屏&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;C&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;播放速度+0.1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;X&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;播放速度-0.1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Z&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;恢复原始播放速度&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;M&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;静音&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;方向键 ↑&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;音量 +&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;方向键 ↓&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;音量 -&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ALT+K&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;按顺时针将画面旋转90度&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;CTRL+E&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;截图（Tips：可按键盘 &lt;strong&gt;K 键&lt;/strong&gt; 在 &lt;strong&gt;选择截图存档路径&lt;/strong&gt; 选项中修改截图保存路径和图片格式）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;img src=&#34;https://1e0.top/img/potplayer/img04.jpg&#34; alt=&#34;:(&#34; &gt;
+&lt;p&gt;以上是自己常用的快捷键，如果想了解更多快捷键可在 PotPlayer 中查看，按住&lt;code&gt;F1 键&lt;/code&gt;在弹出的 PotPlayer 信息中选择&lt;code&gt;快捷键列表&lt;/code&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;添加字幕&#34;&gt;添加字幕&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;将在网上下载好字幕文件拖入 PotPlayer 视频画面中即可使用字幕或按&lt;code&gt;L键&lt;/code&gt;选择&lt;code&gt;打开字幕文件&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如字幕与视频不同步，可在 PotPlayer 中&lt;code&gt;右键鼠标&lt;/code&gt;选择&lt;code&gt;字幕&lt;/code&gt;&amp;gt;&lt;code&gt;字幕同步(帧率)&lt;/code&gt;
+中调整视频帧率与字幕同步快捷键&lt;code&gt;&amp;gt;&lt;/code&gt;超前 0.5 秒、&lt;code&gt;&amp;lt;&lt;/code&gt;滞后 0.5 秒、&lt;code&gt;CTRL+&amp;gt;&lt;/code&gt;超前 5 秒、&lt;code&gt;CTRL+&amp;lt;&lt;/code&gt;滞后 5 秒或选择&lt;code&gt;手动调整同步&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;或使用 PotPlayer 在线字幕搜索和实时字幕翻译功能。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;potplayer美化&#34;&gt;PotPlayer美化&lt;/h2&gt;
+&lt;h3 id=&#34;边框&#34;&gt;边框&lt;/h3&gt;
+&lt;p&gt;按住键盘上 &lt;code&gt;F5键&lt;/code&gt;在左边&lt;code&gt;基本&lt;/code&gt;菜单中选中&lt;code&gt;皮肤/配色&lt;/code&gt;在设置栏中勾选&lt;code&gt;视频下自动隐藏&lt;/code&gt;。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/potplayer/img05.jpg&#34;  alt=&#34;:(&#34; &gt;
+&lt;p&gt;点击应用，PotPlayer 的界面就会变成这个样子。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/potplayer/img06.jpg&#34;   alt=&#34;:(&#34; &gt;
+&lt;p&gt;这样当我们打开一个视频时就会把其它多余的边框覆盖掉窗口界面仅显示视频内容，如果想查看被隐藏的部分可将鼠标移动到原本的位置查看即可。&lt;/p&gt;
+&lt;h3 id=&#34;使用-potplayer-皮肤&#34;&gt;使用 PotPlayer 皮肤&lt;/h3&gt;
+&lt;p&gt;PotPlayer 有许多精美的皮肤可以选择，这里我使用的是—&lt;code&gt;Kardox汉化版&lt;/code&gt;下载地址：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://pan.baidu.com/s/1c2Xw3UK&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;https://pan.baidu.com/s/1c2Xw3UK&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;密码：6666&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;使用皮肤效果如下:&lt;/strong&gt;&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/potplayer/img07.jpg&#34;  alt=&#34;:(&#34; &gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;设置步骤&#34;&gt;设置步骤&lt;/h3&gt;
+&lt;p&gt;将下载好的皮肤文件放置到 &lt;code&gt;PotPlayer 安装目录&lt;/code&gt;下的 &lt;code&gt;Skins&lt;/code&gt; 文件夹中。&lt;/p&gt;
+&lt;p&gt;按住键盘上 &lt;code&gt;F5键&lt;/code&gt; 在左边&lt;code&gt;基本&lt;/code&gt;菜单中选中&lt;code&gt;皮肤/配色&lt;/code&gt;在设置项中点击&lt;code&gt;重新搜索&lt;/code&gt;然后选择使用的皮肤，最后点击应用即可。&lt;/p&gt;
+&lt;img src=&#34;https://1e0.top/img/potplayer/img09.jpg&#34;   alt=&#34;:(&#34; &gt;
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.zhihu.com/question/20710497&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;PotPlayer 到底好在哪里？&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://c.tieba.baidu.com/p/5105664103?pn=2&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;分享一款简约好看的皮肤 Kardox（汉化版）&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.zhihu.com/question/53289843&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;PotPlayer有哪些好看的皮肤？&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

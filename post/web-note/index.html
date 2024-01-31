@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.122.0"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest"><title>Web 安全学习笔记&nbsp;&ndash;&nbsp;Ke1pX&#39;s Blog</title>
+
+
+
+
+
+
+<style title="Normalize iconfont">.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}</style>
+
+<link rel="stylesheet" href="/css/core.d8b6012c0ed15bd9522f2a69ab4af7a47749039b662fab09ba21fb89493571df846ceb54b5873666597cbc974e9fa568.css" integrity="sha384-2LYBLA7RW9lSLyppq0r3pHdJA5tmL6sJuiH7iUk1cd&#43;EbOtUtYc2Zll8vJdOn6Vo">
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Web 安全学习笔记" />
+<meta name="description" content="HTTP协议
+HTTP ( HyperText Transfer Protocol )协议即 超文本传输协议，详细规定了浏览器和服务器之间相互通信的规则。HTTP 是一种无状态的协议，无状态指的是 Web 浏览器与 Web 服务器之间不需要建立持久的连接 HTTP 协议规定只能由客户端主动发送请求，服务器不能主动向客户端发送数据即遵循 请求(Response) / 响应 流程。">
+
+
+<script src="/js/base.1351f9b51f82311528d10cabf8d525eb8b4b2d730ae2a75b44fe3edf08b098afa085f8fed4229ecfee34317a18e71808.js" defer integrity="sha384-E1H5tR&#43;CMRUo0Qyr&#43;NUl64tLLXMK4qdbRP4&#43;3wiwmK&#43;ghfj&#43;1CKez&#43;40MXoY5xgI"></script>
+<script>(() => {
+  // <stdin>
+  remark_config = {
+    host: void 0,
+    locale: void 0,
+    no_footer: true,
+    components: []
+    // 改成在相应页面手动打开
+  };
+  if (void 0) {
+    remark_config.site_id = void 0;
+  }
+  if (void 0) {
+    remark_config.url = void 0 + window.location.pathname;
+  }
+  if (void 0) {
+    remark_config.theme = void 0;
+  }
+})();
+</script>
+
+
+
+
+<script>remark_config.components = ["embed"]</script>
+
+
+<script src="/js/post.66b3fd96095efd44a25bff6070506c8bf4cca83a86019bf994a08b2f9993f47d25e0864c4ac0d05e2e467b4b8016e1c9.js"defer
+  integrity="sha384-ZrP9lgle/USiW/9gcFBsi/TMqDqGAZv5lKCLL5mT9H0l4IZMSsDQXi5Ge0uAFuHJ"></script>
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "BlogPosting",
+    "headline": "Web 安全学习笔记",
+    "author": {
+      "@type": "Person",
+      "name": "Ke1pX"
+    },
+    "datePublished":"2020-05-07",
+    "dateModified":"2020-05-07"}
+</script>
+
+
+  <link rel="alternate" type="application/rss+xml" href="/index.xml" title="Ke1pX&#39;s Blog">
+
+
+
+<script>!function(e,n){for(var o=0;o<e.length;o++){var r=n.createElement("script"),c=".js",d=n.head||n.body;"noModule"in r?(r.type="module",c=".mjs"):r.async=!0,r.defer=!0,r.src=remark_config.host+"/web/"+e[o]+c,d.appendChild(r)}}(remark_config.components||["embed"],document);
+</script>
+<body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Ke1pX's Blog</span></a></span>
+        <span class="header right-side">
+<div class="nav wrap">
+  <nav class="nav"><a class="nav item link" href="/archives/"title="归档">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-box-archive"></use>
+        </svg>
+        <span>Archives</span>
+      </a><a class="nav item link" href="/about/"title="关于我">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-user"></use>
+        </svg>
+        <span>About</span>
+      </a><a class="nav item link" href="/index.xml"title="">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-rss-square"></use>
+        </svg>
+        <span>RSS</span>
+      </a><button id="theme-changer" class="nav item"
+      onclick="themeManager.setNextTheme()" title="切换主题">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-lightbulb"></use>
+      </svg>
+    </button>
+  </nav>
+</div>
+</span></div></section><section id="content">
+
+
+<main id="article-and-sidebar">
+  <div class="article-container"><section class="article header">
+    <h1 class="article title">Web 安全学习笔记</h1><p class="article date">2020 年 05 月 07 日<span class="reading-time"> • 预计阅读时间 5 分钟</span></p></section><article class="article markdown-body"><h1 id="http协议">HTTP协议</h1>
+<p><strong>HTTP</strong> ( HyperText Transfer Protocol )协议即 <strong>超文本传输协议</strong>，详细规定了浏览器和服务器之间相互通信的规则。HTTP 是一种无状态的协议，无状态指的是 Web 浏览器与 Web 服务器之间不需要建立持久的连接 HTTP 协议规定只能由客户端主动发送请求，服务器不能主动向客户端发送数据即遵循 <strong>请求(Response) / 响应</strong> 流程。</p>
+<h2 id="发起一个-http-请求">发起一个 HTTP 请求</h2>
+<p>在浏览器地址栏输入一个有效 <strong>URL</strong> 后按回车键，即可发起一个 HTTP 请求并会看到请求返回的结果 — HTTP 响应。</p>
+<p>URL：统一资源定位符或网页地址</p>
+<p>URL 标准格式：</p>
+<p>协议：//服务器IP [：端口号] /路径 /[查询]</p>
+<blockquote>
+<p>例如：http://www.example.com:8080/index.html&hellip;</p>
+</blockquote>
+<h2 id="http-请求">HTTP 请求</h2>
+<p>HTTP 请求内分为三部分内容组成，分别是<strong>请求行</strong>(请求方法)、<strong>请求头</strong>(消息报头)、<strong>请求正文</strong>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">POST /login.php HTTP/1.1	#请求行
+</span></span><span class="line"><span class="cl">HOST: www.example.com		#请求头
+</span></span><span class="line"><span class="cl">User-Agent: User-Agent: Mozilla/5.0 (windows NT 10.0; Win64; x64) AppleWebKit/537.36...
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#空白行，表示请求头结束
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Username-admin&amp;password=123456	#请求正文
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中请求行分为三段第一段 <strong>POST</strong> 表示请求方法用 <strong>/</strong> 分隔， <strong>login.php</strong> 表示请求的文件资源，最后一段标记的是 HTTP 协议的 <strong>版本消息</strong>。</p>
+<p>请求头部分 <strong>HOST</strong> 标记请求的主机地址、<strong>User-Agent</strong> 标记浏览器消息等，请求头信息可修改。</p>
+<p>HTTP 请求数据包中的最后一段为请求的 <strong>正文</strong>。</p>
+<h2 id="http-响应">HTTP 响应</h2>
+<p>HTTP 响应也分为三部分内容组成，分别为 <strong>响应行</strong>、<strong>响应头</strong>、<strong>响应正文</strong> 即与 HTTP 请求对应。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">HTTP/1.1 200 OK     #响应行
+</span></span><span class="line"><span class="cl">Date: Fri, 08 May 2020 03:37:11 GMT     #响应头
+</span></span><span class="line"><span class="cl">Content-Type: application/x-javascript;charset=utf-8
+</span></span><span class="line"><span class="cl">Connection: close
+</span></span><span class="line"><span class="cl">P3P: CP=CAO password OUR
+</span></span><span class="line"><span class="cl">Set-cookie: fanyamoocs=11401F839C536D9E; Domain=example.com; Path=/; HttpOnly
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#空白行，表示响应头结束
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&lt;html&gt;
+</span></span><span class="line"><span class="cl">	&lt;head&gt;&lt;title&gt; Index.html &lt;/title&gt;&lt;/head&gt;    #响应正文
+</span></span><span class="line"><span class="cl">&lt;/html&gt;
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中响应行带有 <strong>HTTP 的版本信息</strong>、状态码及消息如 “OK”。</p>
+<p>响应头标记数据类型时间等信息。</p>
+<p>响应正文即客户端请求的 <strong>HTML 数据</strong>。</p>
+<h2 id="http-请求方法">HTTP 请求方法</h2>
+<p>常用 <strong>GET</strong>、<strong>POST</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>请求方法</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>用于获取请求页面的指定信息(以实体的格式)，请求非 HTML 资源返回 Web 容器解析后的 HTML 源代码；GET 方法请求可以带参数，参数项以“&amp;”分隔</td>
+</tr>
+<tr>
+<td>HEAD</td>
+<td>是除了服务器不能再响应内容中返回的内容其余与 GET 方法相同，此方法多用于测试超文本链接的有效性、可访问性和最近的改变</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>与 GET 方法类似，区别于 GET 方法无请求内容而 POST 方法中带有请求内容，POST 请求方法主要用于向服务器传输数据，相对于 POST 方法 GET 方法安全性较低</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>用于请求服务器把请求的实体存储在请求资源下，如请求资源在服务器存在则将在把原有的数据替换为请求中数据，如不存在则将在服务器中创建这个资源将数据存入</td>
+</tr>
+<tr>
+<td>MOVE</td>
+<td>此方法向服务器请求移动某个资源</td>
+</tr>
+<tr>
+<td>COPY</td>
+<td>此方法向服务器请求拷贝那个资源</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>用于请求服务器删除请求中指定的资源</td>
+</tr>
+<tr>
+<td>TRACE</td>
+<td>用于激发一个远程的应用层的请求消息回路，相当于返回显示服务器收到的请求</td>
+</tr>
+<tr>
+<td>CONNECT</td>
+<td>为看用于能动态的切换到隧道的代理( HTTP.1 协议规范中保留了此方法)</td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>是用于请求获得由 URL 标识的资源在请求/响应过程中可以使用的功能选项，通过此方法可以获取到请求时可以使用的请求方法选项</td>
+</tr>
+</tbody>
+</table>
+<h2 id="http-响应状态码">HTTP 响应状态码</h2>
+<p>使用浏览器向服务器发送一个 HTTP 请求，服务器接收到我们发送的请求后会向我们客户端返回响应消息，其中 HTTP <strong>响应报文</strong> 中的第一行（响应行）中可见到服务器返回的 <strong>HTTP 状态码</strong>。</p>
+<p>HTTP 协议中的状态码由三位数字组成，第一位数字定义响应的类别，有以下 <strong>5 种</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1xx</td>
+<td>信息提示，表示请求已被成功接收，继续处理。其范围位 100~101</td>
+</tr>
+<tr>
+<td>2xx</td>
+<td>成功，服务器成功处理请求。范围为 200~206</td>
+</tr>
+<tr>
+<td>3xx</td>
+<td>重定向，重定向状态码用于告诉浏览器浏览器客户端，访问的资源已经被移动，并告诉客户端新的资源地址位置，此时浏览器将重新对新资源发起请求。其范围为：300~305</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td>客户端错误状态码，当客户端发送一些无法处理的请求，例如格式错误的请求或者不存在的URL服务器所返回的状态码。其范围为：400~415</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td>当客户端发送了一条有效的请求，但 Web 服务器无法正常处理或服务器内部错误等服务器所返回的状态码。其范围为：500~505</td>
+</tr>
+</tbody>
+</table>
+<h3 id="常见的状态码">常见的状态码</h3>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>客户端请求成功</td>
+</tr>
+<tr>
+<td>201</td>
+<td>一般用 put 方法，成功在服务器端成功创建文件后返回的状态码</td>
+</tr>
+<tr>
+<td>301</td>
+<td>请求资源被找到，永久性的将请求重定向到 location 所指定的 url 上，后所有的请求都将被重定向</td>
+</tr>
+<tr>
+<td>302</td>
+<td>请求资源被找到，只是临时重定向到 localtion 所指定的 url 上随后的请求将不在重定向重定向</td>
+</tr>
+<tr>
+<td>400</td>
+<td>客户端有语法错误，不能被服务器所理解</td>
+</tr>
+<tr>
+<td>401</td>
+<td>请求未经授权</td>
+</tr>
+<tr>
+<td>403</td>
+<td>服务器收到请求，但拒绝提供服务</td>
+</tr>
+<tr>
+<td>404</td>
+<td>请求资源不存在</td>
+</tr>
+<tr>
+<td>500</td>
+<td>服务器内部错误</td>
+</tr>
+<tr>
+<td>502</td>
+<td>一般是由于网站连接过多，服务器暂时无法做出正常响应</td>
+</tr>
+<tr>
+<td>503</td>
+<td>服务器当前不能处理客户端请求</td>
+</tr>
+</tbody>
+</table>
+<h2 id="http-消息">HTTP 消息</h2>
+<p>HTTP 消息又称为 HTTP 头(HTTP header)由四部分组成。</p>
+<p>分别是<strong>请求头</strong>、<strong>响应头</strong>、<strong>普通头</strong>、<strong>实体头</strong>。</p>
+<h3 id="1请求头">1.请求头</h3>
+<p>请求头在 HTTP 请求报文中允许客户端向服务端传递请求的附加消息和客户端自身学习，常见 HTTP 请求头如下：</p>
+<!--
+```XML
+HOST 		#HOST 请求报文域主要用于指定被请求资源的 Internet 主 机和端口号，例如：HOST:www.explem.com:80
+
+Referer  	#Referer 包含一个 URL ，表示当前访问的URL的上一个 URL，即用户是从哪里跳转来到此页面
+
+Cookie 		#Cookie 是非常重要的请求头，它是一段文本，常用来表示请求者身份等
+
+Range		#Range 可以请求实体的部分内容，多线程下载一定会用到此请求头
+
+Accept 		#Accept 请求报头域用于接收那些 MIME 类型的消息，如 Accept：text
+
+User-Agent 	#User-Agent请求报头域允许客户端将它的操作系统、浏览器个其它属性告诉服务器
+
+X-forward-for 	#X-forward-for 即 XFF 头用来标记请求端的 IP 地址，可以由多个，中间以逗号隔开
+
+AcceptCharset 	#Accept-Charset 请求报头域用于指定客户端接收的字符集，如请求消息中没有定义这个域则默认可接收任何字符集
+```		
+-->
+<table>
+<thead>
+<tr>
+<th>请求头</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HOST</td>
+<td>HOST 请求报文域主要用于指定被请求资源的 Internet 主 机和端口号，例如：HOST:www.explem.com:80</td>
+</tr>
+<tr>
+<td>Referer</td>
+<td>Referer 包含一个 URL ，表示当前访问的URL的上一个 URL，即用户是从哪里跳转来到此页面</td>
+</tr>
+<tr>
+<td>Cookie</td>
+<td>Cookie 是非常重要的请求头，它是一段文本，常用来表示请求者身份等</td>
+</tr>
+<tr>
+<td>Range</td>
+<td>Range 可以请求实体的部分内容，多线程下载一定会用到此请求头</td>
+</tr>
+<tr>
+<td>Accept               </td>
+<td>Accept 请求报头域用于接收那些 MIME 类型的消息，如 Accept：text</td>
+</tr>
+<tr>
+<td>User-Agent</td>
+<td>User-Agent请求报头域允许客户端将它的操作系统、浏览器个其它属性告诉服务器</td>
+</tr>
+<tr>
+<td>X-Forward-For</td>
+<td>X-forward-for 即 XFF 头用来标记请求端的 IP 地址，可以由多个，中间以逗号隔开</td>
+</tr>
+<tr>
+<td>Accept-Charset</td>
+<td>Accept-Charset 请求报头域用于指定客户端接收的字符集，如请求消息中没有定义这个域则默认可接收任何字符集</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2响应头">2.响应头</h3>
+<p>响应头是服务器根据请求向客户端发送的 HTTP 头，常见 HTTP 响应头如下：</p>
+<!--
+
+```text
+Server 		#Server 表示服务器所使用的 Web 
+
+Location	#服务器通过该响应报头域告诉浏览器去访问哪一个页面，浏览器接收到后通常会立即访问 Location 头所指向的页面，通常配合 302 状态码使用
+
+Refresh		#服务器通过此响应报头域告诉浏览器定时刷新浏览器
+
+Set-cookie 	#向客户端设置 Cookie，即服务器向客户端发送的 Cookie 信息
+
+Last-Modified 	#服务器通过该响应报头域告诉浏览器资源的最后修改时间
+```
+-->
+<table>
+<thead>
+<tr>
+<th>响应头</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server</td>
+<td>Server 表示服务器所使用的 Web</td>
+</tr>
+<tr>
+<td>Location</td>
+<td>服务器通过该响应报头域告诉浏览器去访问哪一个页面，浏览器接收到后通常会立即访问 Location 头所指向的页面，通常配合 302 状态码使用</td>
+</tr>
+<tr>
+<td>Refresh            </td>
+<td>服务器通过此响应报头域告诉浏览器定时刷新浏览器</td>
+</tr>
+<tr>
+<td>Set-cookie</td>
+<td>向客户端设置 Cookie，即服务器向客户端发送的 Cookie 信息</td>
+</tr>
+<tr>
+<td>Last-Modified</td>
+<td>服务器通过该响应报头域告诉浏览器资源的最后修改时间</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3普通头">3.普通头</h3>
+<p>在普通报头中，有少数报头域用于所有的请求和响应消息，但并不用于被传输的实体，只用于传输的消息。</p>
+<h3 id="4实体头">4.实体头</h3>
+<p>请求和响应都可以传递以一个实体头。实体头定义了关于实体正文和请求所标识的资源的元消息。元消息是实体内容的属性，包括实体消息类型、长度、压缩方法、最后一次修改时间等。</p>
+<h2 id="参考文献">参考文献</h2>
+<p><a href="https://book.douban.com/subject/26348894/"target="_blank" rel="noopener noreferrer">《Web安全深度剖析》</a> 、 <del><a href="https://klionsec.github.io/2017/06/18/http-basic/"target="_blank" rel="noopener noreferrer">《从入侵者的眼中去理解 http 协议》</a></del></p></article>
+
+    
+    
+    
+    
+    <section class="article license-custom"><a rel="license" href=https://creativecommons.org/licenses/by-nc-sa/4.0/ target="_blank">
+      <img alt="CC BY-NC-SA 4.0" width=80 height=15
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPCAIAAAD8q9/YAAAABGdBTUEAANbY1E9YMgAAAapJREFUSMflljFPAjEUx98HsMUb2aBqdCKSToQ4cHTD9SYSx2Nw0sFOJMQB2DCBpV/hnNTFwOAEIaTxG/AV&#43;hVqtOQ8oXdybue93HBp3mvv9/7vvStADk3nxr6BH5&#43;C6NO57gDAcDi0hjHGMMYTMTbOq/dV4bCQCV3twBMxxhjH0YbMp2enxn/6Nu31ehkGrl/Uy&#43;Vycm1IKQGgfdU2IUu5bF22sgqMMDLySikJIQDAGFNKMcYAgBAipTQiV2k1rOrRw8g6F7YP&#43;/luXYxGWZ0TTknwtwN377sAMJvNtNaEEM/ztNb8yxzHUUoJIYIgMIsIo7Cq54u5dfetl7gP2s2ONVlxOUrnHwW&#43;vbsBACmlUio6tzzPo5RGq5pzjjE2US&#43;vz4vVIiH3VhnjIONSs7vnrrwJIqdQmDHm&#43;75RmHMuhNgojFIonJB7axn/qthW7B8V/uxhtOnhIAgcxwEA3/fDHqaUrtdrrXWz2aycV/bs4f2B9&#43;/huDGRGrhWr5VKpRxN6YkYI3QwGAwSgF3XPT45&#43;if/4XB09ft9K23DbRSLxWzftPJ1l86VfQA/Yr8BK4J&#43;aAAAAABJRU5ErkJggg==" />
+    </a>
+    <p>© 2020-2024 Ke1pX</p>
+  </section></div>
+
+  
+  
+    <div id="article-sidebar" class="article sidebar">
+      <button onclick="sidebarManager.toggle()">目录</button>
+      <nav id="TableOfContents">
+  <ol>
+    <li><a href="#发起一个-http-请求">发起一个 HTTP 请求</a></li>
+    <li><a href="#http-请求">HTTP 请求</a></li>
+    <li><a href="#http-响应">HTTP 响应</a></li>
+    <li><a href="#http-请求方法">HTTP 请求方法</a></li>
+    <li><a href="#http-响应状态码">HTTP 响应状态码</a>
+      <ol>
+        <li><a href="#常见的状态码">常见的状态码</a></li>
+      </ol>
+    </li>
+    <li><a href="#http-消息">HTTP 消息</a>
+      <ol>
+        <li><a href="#1请求头">1.请求头</a></li>
+        <li><a href="#2响应头">2.响应头</a></li>
+        <li><a href="#3普通头">3.普通头</a></li>
+        <li><a href="#4实体头">4.实体头</a></li>
+      </ol>
+    </li>
+    <li><a href="#参考文献">参考文献</a></li>
+  </ol>
+</nav>
+    </div>
+  
+</main>
+
+<div class="article bottom">
+  
+  </div></section><section id="footer"><div class="footer-wrap">
+  <p class="copyright">© 2020-2024 Ke1pX</p>
+  <p class="powerby">
+    <span>Powered by</span>
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>
+    <span>&</span>
+    <a href="https://github.com/cntrump/hugo-notepadium" target="_blank"
+      rel="noopener">Notepadium</a>
+    <span>(<a href="https://github.com/rydesun/catcat.cc" target="_blank"
+      rel="noopener">modified</a>)</span>
+  </p>
+</div>
+</section></body>
+
+</html>
